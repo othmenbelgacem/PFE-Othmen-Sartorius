@@ -1,0 +1,133 @@
+<div class="row">
+  <div class="col-lg-3 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-5 col-md-4">
+            <div class="icon-big text-center icon-warning">
+              <i class="nc-icon nc-globe text-warning"></i>
+            </div>
+          </div>
+          <div class="col-7 col-md-8">
+            <div class="numbers">
+              <p class="card-category">Nombre total Des Sessions</p>
+              <p class="card-title">{{ totalSession }}</p>
+              <p></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-5 col-md-4">
+            <div class="icon-big text-center icon-warning">
+              <i class="nc-icon nc-money-coins text-success"></i>
+            </div>
+          </div>
+          <div class="col-7 col-md-8">
+            <div class="numbers">
+              <p class="card-category">Nombre des sessions planifiées</p>
+              <p class="card-title">{{ totalPlannedSession }}</p>
+              <p></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-5 col-md-4">
+            <div class="icon-big text-center icon-warning">
+              <i class="nc-icon nc-vector text-danger"></i>
+            </div>
+          </div>
+          <div class="col-7 col-md-8">
+            <div class="numbers">
+              <p class="card-category">Nombre des sessions en cours</p>
+              <p class="card-title">{{ totalInProgressSession }}</p>
+              <p></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-5 col-md-4">
+            <div class="icon-big text-center icon-warning">
+              <i class="nc-icon nc-favourite-28 text-primary"></i>
+            </div>
+          </div>
+          <div class="col-7 col-md-8">
+            <div class="numbers">
+              <p class="card-category">Nombre de sessions terminées</p>
+              <p class="card-title">{{ totalDoneSession }}</p>
+              <p></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="isAdministrator">
+  <div class="col-md-12">
+    <div class="card card-chart">
+      <div class="card-header">
+        <h5 class="card-title">Top 10 des formations les plus demandées</h5>
+      </div>
+      <div class="card-body">
+        <canvas id="trainingRequestChart" width="400" height="100"></canvas>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-12" *ngIf="isAdministrator">
+    <div class="card card-chart">
+      <div class="card-header">
+        <h5 class="card-title">
+          Nombre des sessions terminés/en cours pour chaque formateur
+        </h5>
+      </div>
+      <div class="card-body">
+        <canvas id="speedChart" width="400" height="100"></canvas>
+      </div>
+      <div class="card-footer">
+        <div class="chart-legend">
+          <i class="fa fa-circle text-info"></i>Sessions terminées
+          <i class="fa fa-circle text-warning"></i>Sessions en cours
+        </div>
+        <hr/>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12" *ngIf="isAdministrator">
+    <div class="card card-chart">
+      <div class="card-header">
+        <h5 class="card-title">Taux de rejet des sessions</h5>
+      </div>
+      <div class="card-body">
+        <canvas id="rejectedSessionsChart" width="400" height="100"></canvas>
+      </div>
+      <div class="card-footer">
+        <div class="chart-legend">
+          <p style="font-size: 22px;"><i class="fa fa-circle text-danger"></i> Sessions rejetées :</p>
+        </div>
+        <hr/>
+        <p class="card-title" style="font-size: 24px; font-weight: bold;">{{ rejectedSessionPercentage }}%</p>
+      </div>
+    </div>
+  </div>
+</div>

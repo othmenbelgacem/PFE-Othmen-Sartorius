@@ -1,0 +1,31 @@
+.card {
+  padding: 2%;
+}
+
+.training {
+  &_durations {
+    display: flex;
+    color: rgb(170, 170, 170);
+    gap: 5%;
+    p {
+      font-size: smaller;
+    }
+  }
+
+  &_trainers {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  &_trainer-pic {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+}
+.icon {
+  color: black;
+  font-size: 15px;
+}

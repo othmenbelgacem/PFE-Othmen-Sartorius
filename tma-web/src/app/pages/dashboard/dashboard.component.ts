@@ -1,0 +1,179 @@
+import { Component, OnInit } from '@angular/core';
+import Chart from 'chart.js';
+import { TrainingSessionStatisticService } from "../../service/training-session-statistic/trainings-session-static.service";
+import { UtilsService } from "../../service/utils.service";
+import { TrainingRequestCount, TrainingSessionStatisticByTrainerOrOperator, TrainingSessionStatistic } from "../../model/trainingSessionStatistic/training-session-statistic.model";
+
+@Component({
+  selector: 'dashboard-cmp',
+  moduleId: module.id,
+  templateUrl: 'dashboard.component.html'
+})
+export class DashboardComponent implements OnInit {
+  showOperator = true;
+  isManager: boolean = UtilsService.isManager();
+  isAdministrator: boolean = UtilsService.isAdministrator();
+  isTrainer: boolean = UtilsService.isTrainer();
+  isOperator: boolean = UtilsService.isCollaborator();
+  totalSession: number = 0;
+  totalPlannedSession: number = 0;
+  totalInProgressSession: number = 0;
+  totalDoneSession: number = 0;
+  rejectedSession: number = 0; 
+  rejectedSessionPercentage: number = 0; 
+  sessionStaticByTrainerOrOperator: TrainingSessionStatisticByTrainerOrOperator[];
+  public canvas: any;
+  public ctx;
+  public chartColor;
+
+  constructor(private trainingSessionStatisticService: TrainingSessionStatisticService) { }
+
+  ngOnInit() {
+    if (this.isAdministrator) {
+      this.trainingSessionStatisticService.getTop10TrainingRequests().subscribe((data: TrainingRequestCount[]) => {
+        this.createChart(data);
+      });
+    }
+    this.trainingSessionStatisticService.getTrainingSessionStatistic().subscribe((value: TrainingSessionStatistic) => {
+      this.totalSession = value.totalSession;
+      this.totalPlannedSession = value.totalPlannedSession;
+      this.totalInProgressSession = value.totalInProgressSession;
+      this.totalDoneSession = value.totalDoneSession;
+      this.rejectedSession = value.rejectedSession; 
+      this.sessionStaticByTrainerOrOperator = value.sessionStaticByTrainerOrOperator;
+      
+      this.calculateRejectedSessionPercentage();
+      this.createRejectedSessionChart();
+
+      if (this.isAdministrator) {
+        var speedCanvas = document.getElementById("speedChart");
+        var dataFirst = {
+          data: this.sessionStaticByTrainerOrOperator.map(item => item.totalInProgressSession),
+          fill: false,
+          borderColor: '#fbc658',
+          backgroundColor: 'transparent',
+          pointBorderColor: '#fbc658',
+          pointRadius: 4,
+          pointHoverRadius: 4,
+          pointBorderWidth: 8,
+        };
+
+        var dataSecond = {
+          data: this.sessionStaticByTrainerOrOperator.map(item => item.totalDoneSession),
+          fill: false,
+          borderColor: '#51CACF',
+          backgroundColor: 'transparent',
+          pointBorderColor: '#51CACF',
+          pointRadius: 4,
+          pointHoverRadius: 4,
+          pointBorderWidth: 8,
+        };
+
+        var speedData = {
+          labels: this.sessionStaticByTrainerOrOperator.map(item => item.fullName),
+          datasets: [dataFirst, dataSecond]
+        };
+
+        var chartOptions = {
+          legend: {
+            display: false,
+            position: 'top'
+          }
+        };
+
+        var lineChart = new Chart(speedCanvas, {
+          type: 'line',
+          hover: false,
+          data: speedData,
+          options: chartOptions
+        });
+      }
+    });
+
+    this.chartColor = "#FFFFFF";
+  }
+
+  calculateRejectedSessionPercentage() {
+    if (this.totalSession > 0) {
+      this.rejectedSessionPercentage = parseFloat(((this.rejectedSession / this.totalSession) * 100).toFixed(2));
+    } else {
+      this.rejectedSessionPercentage = 0;
+    }
+  }
+
+  createRejectedSessionChart(): void {
+    const ctx = document.getElementById('rejectedSessionsChart') as HTMLCanvasElement;
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Sessions rejetées', 'Autres sessions'],
+        datasets: [{
+          data: [this.rejectedSession, this.totalSession - this.rejectedSession],
+          backgroundColor: ['#FF6384', '#36A2EB'],
+          hoverBackgroundColor: ['#FF6384', '#36A2EB']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          },
+          title: {
+            display: true,
+            text: 'Taux de rejet des sessions'
+          }
+        }
+      }
+    });
+  }
+
+  createChart(data: TrainingRequestCount[]): void {
+    const trainingNames = data.map(item => item.trainingName);
+    const requestCounts = data.map(item => item.requestCount);
+  
+    const ctx = document.getElementById('trainingRequestChart') as HTMLCanvasElement;
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: trainingNames,
+        datasets: [{
+          label: 'Nombre total des demandes',
+          data: requestCounts,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            beginAtZero: true,
+            min: 0
+          },
+          y: {
+            beginAtZero: true,
+            min: 0
+          }
+        },
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          },
+          title: {
+            display: true,
+            text: 'Top 10 des formations les plus demandées'
+          }
+        },
+        indexAxis: 'x',
+        barThickness: 20,
+        maxBarThickness: 30,
+        categoryPercentage: 0.5,
+        barPercentage: 0.5
+      }
+    });
+  }
+}  

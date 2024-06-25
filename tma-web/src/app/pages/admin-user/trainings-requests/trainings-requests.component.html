@@ -1,0 +1,283 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="row pl-lg-5 pr-lg-5 header-row">
+          <h4 class="card-title">Liste des demandes des formations</h4>
+          <div class="update">
+            <button
+              type="submit"
+              class="btn btn-primary btn-round"
+              (click)="showPlanningSessionModal()"
+            >
+              <i class="fa fa-calendar icon"></i>
+              Planifier une session
+            </button>
+          </div>
+        </div>
+        <div
+          class="row pl-lg-5 pr-lg-5 d-flex align-items-center justify-content-center"
+        >
+          <div class="filter">
+            <select
+              (change)="onChangeOptions($event)"
+              [id]="TRAINING_FILTER_ELEMENT_ID"
+            >
+              <option [value]="DEFAULT_FILTER_VALUE">
+                Filtrer par formation..
+              </option>
+              <ng-container *ngFor="let option of trainingsFilterOptions">
+                <option [value]="option.trainingTypeUuid">
+                  {{ option.label }}
+                </option>
+              </ng-container>
+            </select>
+            <select
+              [disabled]="selectedTrainingId == DEFAULT_FILTER_VALUE"
+              (change)="onChangeOptions($event)"
+              [id]="SUB_TRAINING_FILTER_ELEMENT_ID"
+            >
+              <option [value]="DEFAULT_FILTER_VALUE">
+                Filtrer par sous-formation..
+              </option>
+              <ng-container *ngFor="let option of subTrainingsFilterOptions">
+                <option [value]="option.uuid">{{ option.label }}</option>
+              </ng-container>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div
+          class="table-responsive"
+          *ngIf="currentPageContent?.items?.length != 0; else emptyTemplate"
+        >
+          <table class="table">
+            <thead class="text-primary">
+              <th class="label" style="width: 27%">Formation</th>
+              <th style="width: 27%">Sous-Formation</th>
+              <th style="width: 15%">Chéf d'équipe</th>
+              <th style="width: 15%">Opérateur</th>
+              <th style="width: 10%">Date</th>
+              <th style="width: 6%">Statut</th>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let request of currentPageContent?.items
+                    | paginate
+                      : {
+                          itemsPerPage: PAGE_SIZE,
+                          currentPage: currentPageNumber,
+                          totalItems: currentPageContent?.count
+                        }
+                "
+              >
+                <td>{{ request?.trainingType?.name }}</td>
+                <td>{{ request?.trainingSubType?.name || "-" }}</td>
+                <td>{{ request?.teamLeader?.name }}</td>
+                <td>{{ request?.operator?.name }}</td>
+                <td>{{ request?.requestDate }}</td>
+                <td style="text-align: center">
+                  <span
+                    *ngIf="request.status === 'REQUESTED'"
+                    class="badge status-new"
+                    >Demandé</span
+                  >
+                  <span
+                    *ngIf="request.status === 'SESSION_PLANNED'"
+                    class="badge status-negotiation"
+                    >Session planifiée</span
+                  >
+                  <span
+                    *ngIf="request.status === 'SESSION_IN_PROGRESS'"
+                    class="badge status-active"
+                    >Session en cours</span
+                  >
+                  <span
+                    *ngIf="request.status === 'SESSION_FINISHED'"
+                    class="badge status-active"
+                    >Session terminé</span
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #emptyTemplate>
+          Aucune demande a été trouvée!
+        </ng-template>
+
+        <div *ngIf="currentPageContent?.items?.length > 0" class="mt-3 align">
+          <pagination-controls
+            (pageChange)="onPageChange($event)"
+          ></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #modalContent let-c="close" let-d="dismiss">
+  <div class="modal-body body-model" [dir]="direction">
+    <div class="mod-body">
+      <div class="col-md-12">
+        <div class="card-user">
+          <div class="card-header">
+            <h5 class="card-title">Planifier une session de formation</h5>
+          </div>
+          <div class="card-body">
+            <form id="form" role="form">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Type de formation</label>
+                    <select
+                      name="selectTraining"
+                      style="width: 100%"
+                      class="form-control"
+                      [(ngModel)]="trainingSessionRequest.trainingTypeUuid"
+                      (change)="onChangeFormation($event)"
+                    >
+                      <ng-container *ngFor="let option of trainings">
+                        <option [value]="option.uuid">
+                          {{ option.label }}
+                        </option>
+                      </ng-container>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Sous type de formation</label>
+                    <select
+                      name="selectSubTraining"
+                      class="form-control"
+                      style="width: 100%"
+                      [(ngModel)]="trainingSessionRequest.trainingSubTypeUuid"
+                      [disabled]="
+                        trainingSessionRequest.trainingTypeUuid == null
+                      "
+                      (change)="onChangeSubFormation($event)"
+                    >
+                      <ng-container *ngFor="let option of subTrainings">
+                        <option [value]="option.uuid">
+                          {{ option.label }}
+                        </option>
+                      </ng-container>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Formateur</label>
+                    <select
+                      name="selectTrainer"
+                      class="form-control"
+                      style="width: 100%"
+                      [(ngModel)]="trainingSessionRequest.trainerUuid"
+                      [disabled]="
+                        trainingSessionRequest.trainingTypeUuid == null
+                      "
+                    >
+                      <ng-container *ngFor="let option of trainers">
+                        <option hidden>Sélectionner un formateur</option>
+                        <option [value]="option.uuid">
+                          {{ option.fullName }}
+                        </option>
+                      </ng-container>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Opérateurs assignés</label>
+                    <select
+                      multiple
+                      name="assignedOperators"
+                      style="width: 100%"
+                      class="form-control"
+                      [(ngModel)]="trainingSessionRequest.operatorUuids"
+                    >
+                      <ng-container *ngFor="let op of requestedOperators">
+                        <option [value]="op.userUuid">
+                          {{ op.userFirstName }} {{ op.userLastName }}
+                        </option>
+                      </ng-container>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <label>Heure de départ</label>
+              <div class="cs-form">
+                <input type="time" class="form-control" value="10:05 AM" [(ngModel)]="trainingSessionRequest.startHour"/>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Date de départ</label>
+                    <input
+                      required
+                      type="date"
+                      class="form-control"
+                      placeholder="Date début"
+                      [(ngModel)]="trainingSessionRequest.startDate"
+                      name="startDate"
+                      [min]="minStartDate"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Date fin</label>
+                    <input
+                      required
+                      type="date"
+                      class="form-control"
+                      placeholder="Date fin"
+                      [(ngModel)]="trainingSessionRequest.endDate"
+                      name="endDate"
+                      [disabled]="trainingSessionRequest.startDate == null"
+                      [min]="trainingSessionRequest.startDate"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="place">Lieu De Formation</label>
+                <input type="text" class="form-control" id="place" [(ngModel)]="trainingSessionRequest.place">
+              </div>
+              <div class="row">
+                <div class="update ml-auto mr-2">
+                  <button
+                    type="button"
+                    class="btn btn-round cancel"
+                    (click)="d('Cross click')"
+                  >
+                    Annuler
+                  </button>
+                </div>
+                <div class="update ml-auto mr-auto">
+                  <button
+                    type="submit"
+                    class="btn btn-primary btn-round"
+                    (click)="saveSession()"
+                  >
+                    Enregistrer
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,385 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="row pl-3 pr-3 header-row">
+          <h4 class="card-title">Liste des formations</h4>
+
+          <div class="update">
+            <button
+              type="submit"
+              (click)="onAdd()"
+              class="btn btn-primary btn-round"
+            >
+              Ajouter une formation
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-xl-6 col-md-6 col-12 mb-1">
+            <div class="form-group">
+              <label for="basicInput">Chercher des formations</label>
+              <input
+                type="text"
+                class="form-control"
+                id="basicInput"
+                placeholder="Saisir un text"
+                (keyup)="search($event)"
+                [(ngModel)]="searchText"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="trainingTypeList.length != 0; else emptyTemplate"
+          class="table-responsive"
+        >
+          <table class="table">
+            <thead class="text-primary">
+              <th class="label" style="width: 20%">Libellé</th>
+              <th style="width: 30%">Détails</th>
+              <th style="width: 10%">Durée</th>
+              <th style="width: 10%">Durée de vie</th>
+              <th style="width: 15%">Sous formations</th>
+              <th class="text-right" style="width: 15%">Action</th>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let trainingType of trainingTypeList
+                    | paginate
+                      : {
+                          itemsPerPage: pageSize,
+                          currentPage: page,
+                          totalItems: collectionSize
+                        }
+                "
+              >
+                <td>{{ trainingType.label }}</td>
+                <td>
+                  {{
+                    trainingType.details !== null && trainingType.details !== ""
+                      ? trainingType.details
+                      : "-"
+                  }}
+                </td>
+                <td>
+                  <span *ngIf="trainingType.hourDuration != 0"
+                    >{{ trainingType.hourDuration }} heures</span
+                  >
+                  <span *ngIf="trainingType.hourDuration == 0">-</span>
+                </td>
+                <td>
+                  <span *ngIf="trainingType.lifeDuration != 0"
+                    >{{ trainingType.lifeDuration }} mois</span
+                  >
+                  <span *ngIf="trainingType.lifeDuration == 0">-</span>
+                </td>
+                <td>
+                  <span
+                    class="circle"
+                    (click)="onViewTrainingSubType(trainingType)"
+                    >{{ trainingType.subTypeCount }}</span
+                  >
+                </td>
+                <td class="text-right">
+                  <i
+                    class="fa fa-pencil-square-o mr-3 primary-icon action-icon"
+                    (click)="onEdit(trainingType)"
+                  ></i>
+                  <i
+                    class="fa fa-plus mr-3 primary-icon action-icon"
+                    (click)="onAddTrainingSubType(trainingType)"
+                  ></i>
+                  <i
+                    class="fa fa-trash mr-3 danger-icon action-icon"
+                    (click)="
+                      onDeleteTrainingType(trainingType.trainingTypeUuid)
+                    "
+                  ></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #emptyTemplate>
+          Aucune formation a été trouvée!
+        </ng-template>
+
+        <div *ngIf="trainingTypeList.length > 0" class="mt-3 align">
+          <pagination-controls
+            (pageChange)="onPageChange($event)"
+          ></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #modalContent let-c="close" let-d="dismiss">
+    <div class="modal-body body-model" [dir]="direction">
+      <div class="mod-body">
+        <div class="col-md-12">
+          <div class="card-training">
+            <div class="card-header">
+              <h5 class="card-title">{{ modalTitle }}</h5>
+            </div>
+            <div class="card-body">
+              <form id="form" role="form" #testForm="ngForm" ngNativeValidate>
+                <div class="row">
+                  <div class="col-md-12 pr-1">
+                    <div class="form-group">
+                      <label>Libellé</label>
+                      <textarea
+                        required
+                        type="text"
+                        class="form-control"
+                        placeholder="Libellé"
+                        [(ngModel)]="trainingTypeRequest.label"
+                        name="label"
+                      >
+                      </textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 pr-1">
+                    <div class="form-group">
+                      <label>Détails</label>
+                      <textarea
+                        type="text"
+                        class="form-control"
+                        placeholder="Détails"
+                        [(ngModel)]="trainingTypeRequest.details"
+                        name="details"
+                      >
+                      </textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 pr-1">
+                    <div class="form-group">
+                      <label>Durée (en heures)</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="Durée"
+                        [(ngModel)]="trainingTypeRequest.hourDuration"
+                        name="hourDuration"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 pr-1">
+                    <div class="form-group">
+                      <label>Durée de vie (en mois)</label>
+                      <input
+                        type="number"
+                        min="0"
+                        class="form-control"
+                        placeholder="Durée de vie"
+                        [(ngModel)]="trainingTypeRequest.lifeDuration"
+                        name="lifeDuration"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 pr-1">
+                    <div class="form-group">
+                      <label>durée d'intégration (en jours)</label>
+                      <input
+                        required
+                        type="number"
+                        min="0"
+                        class="form-control"
+                        placeholder="durée d'intégration "
+                        [(ngModel)]="trainingSubTypeRequest.integrationduration"
+                        name="integrationduration"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Formateur</label>
+                      <p-multiSelect
+                        [style]="{ width: '100%' }"
+                        [options]="trainerList"
+                        [(ngModel)]="selectedTrainers"
+                        optionLabel="userFullName"
+                        display="chip"
+                        [showClear]="true"
+                      >
+                      </p-multiSelect>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="update ml-auto mr-2">
+                    <button
+                      type="button"
+                      class="btn btn-round cancel"
+                      (click)="d('Cross click')"
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                  <div class="update ml-auto mr-auto">
+                    <button
+                      type="submit"
+                      class="btn btn-primary btn-round"
+                      (click)="onSaveTrainingType()"
+                    >
+                      Enregistrer
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #subTypeModalContent let-c="close" let-d="dismiss">
+    <div class="modal-body body-model" [dir]="direction">
+      <div class="mod-body">
+        <div class="col-md-12">
+          <div class="card-training">
+            <div class="card-header">
+              <h5 class="card-title">{{ modalTitle }}</h5>
+            </div>
+            <div class="card-body">
+              <form id="form" role="form" #testForm="ngForm" ngNativeValidate>
+                <div class="row">
+                  <div class="col-md-12 pr-1">
+                    <div class="form-group">
+                      <label
+                        >Ajouter un sous formation à la formation
+                        <b>{{ trainingTypeRequest.label }}</b>
+                      </label>
+                      <br /><label>Libellé</label>
+                      <textarea
+                        required
+                        type="text"
+                        class="form-control"
+                        placeholder="Libellé"
+                        [(ngModel)]="trainingSubTypeRequest.label"
+                        name="label"
+                      >
+                      </textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 pr-1">
+                    <div class="form-group">
+                      <label>Détails</label>
+                      <textarea
+                        type="text"
+                        class="form-control"
+                        placeholder="Détails"
+                        [(ngModel)]="trainingSubTypeRequest.details"
+                        name="details"
+                      >
+                      </textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 pr-1">
+                    <div class="form-group">
+                      <label>Durée (en heures)</label>
+                      <input
+                        required
+                        type="number"
+                        class="form-control"
+                        placeholder="Durée"
+                        [(ngModel)]="trainingSubTypeRequest.hourDuration"
+                        name="hourDuration"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 pr-1">
+                    <div class="form-group">
+                      <label>Durée de vie (en mois)</label>
+                      <input
+                        required
+                        type="number"
+                        min="0"
+                        class="form-control"
+                        placeholder="Durée de vie"
+                        [(ngModel)]="trainingSubTypeRequest.lifeDuration"
+                        name="lifeDuration"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 pr-1">
+                    <div class="form-group">
+                      <label>durée d'intégration (en jours)</label>
+                      <input
+                        required
+                        type="number"
+                        min="0"
+                        class="form-control"
+                        placeholder="durée d'intégration "
+                        [(ngModel)]="trainingSubTypeRequest.integrationduration"
+                        name="integrationduration"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Formateur</label>
+                      <p-multiSelect
+                        [style]="{ width: '100%' }"
+                        [options]="trainerList"
+                        [(ngModel)]="selectedTrainers"
+                        optionLabel="userFullName"
+                        display="chip"
+                        [showClear]="true"
+                      >
+                      </p-multiSelect>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="update ml-auto mr-2">
+                    <button
+                      type="button"
+                      class="btn btn-round cancel"
+                      (click)="d('Cross click')"
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                  <div class="update ml-auto mr-auto">
+                    <button
+                      type="submit"
+                      class="btn btn-primary btn-round"
+                      (click)="onSaveSubTraining()"
+                    >
+                      Enregistrer
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,47 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="row pl-lg-5 pr-lg-5 header-row">
+          <h4 class="card-title">Liste des séances de formations</h4>
+          <div class="update">
+            <button
+              type="submit"
+              class="btn btn-primary btn-round"
+              (click)="addPresence()"
+            >
+              <i class="fa fa-calendar icon"></i>
+              Ajouter une feuille de présence
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div *ngIf="sessions.length != 0; else emptyTemplate">
+          <table class="table">
+            <thead class="text-primary">
+              <th class="label" style="width: 27%">Date</th>
+              <th class="label" style="width: 27%">Nombre des présences</th>
+              <th class="label" style="width: 27%">Nomnbre des absences</th>
+              <th style="width: 6%">Actions</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let session of sessions">
+                <td>{{ session?.date }}</td>
+                <td>{{ session?.presentceNumber }}</td>
+                <td>{{ session?.absenceNumber }}</td>
+                <td class="text-right">
+                  <i
+                    class="fa fa-eye mr-3 primary-icon action-icon"
+                    (click)="goToresencesheets(session)"
+                  ></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #emptyTemplate> Aucune séance a été trouvée! </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

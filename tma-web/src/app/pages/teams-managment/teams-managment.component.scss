@@ -1,0 +1,39 @@
+.header-row {
+  justify-content: space-between;
+}
+
+::ng-deep .modal-backdrop {
+  z-index: 1040 !important;
+}
+.card-header {
+  padding: 10px 4px 1px 12px !important;
+  background-color: white;
+}
+
+.align {
+  text-align: center;
+}
+
+.secondary-icon {
+  color: black;
+}
+.primary-icon {
+  color: black;
+}
+
+.danger-icon {
+  color: #ef8157;
+}
+
+.highlighted {
+  background-color: lightgrey;
+}
+select option {
+  padding: 10px; /* Padding à l'intérieur des options */
+  border: 1px solid #ddd; /* Bordure des options */
+  margin: 5px 0; /* Marge entre les options */
+}
+
+select option.highlighted {
+  background-color: lightgrey; /* Couleur de surlignement jaune */
+}

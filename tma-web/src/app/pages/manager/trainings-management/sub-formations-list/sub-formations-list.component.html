@@ -1,0 +1,113 @@
+<div class="pl-4">
+  <h2 class="navbar-brand" style="font-size: 2rem">
+    {{ parentTraining.label }}
+  </h2>
+  <p>{{ parentTraining.details }}</p>
+</div>
+
+<ng-container *ngIf="trainings?.length; else empty">
+  <ng-container *ngFor="let training of trainings">
+    <st-training-component
+      [trainingId]="training.uuid"
+      [trainersList]="training.trainers"
+      [title]="training.label"
+      [description]="training.details"
+      [duration]="training.hourDuration"
+      [lifeDuration]="training.lifeDuration"
+      [actionName]="ASSIGN_OPERATORS"
+      (actionEmit)="actionEmitted($event)"
+    ></st-training-component>
+  </ng-container>
+</ng-container>
+
+<div class="row" *ngIf="managingSubTrainings">
+  <div class="col text-center">
+    <button
+      type="submit"
+      class="btn cancel btn-round"
+      (click)="backToTrainings()"
+    >
+      Retour
+    </button>
+  </div>
+</div>
+
+<ng-template #operatorsModal let-c="close" let-d="dismiss">
+  <div class="modal-body body-model" [dir]="direction">
+    <div class="mod-body">
+      <div class="col-md-12">
+        <div class="card-user">
+          <div class="card-header">
+            <h5 class="card-title">
+              {{ modalTitle }} à la sous-formation:
+              <span
+                ><b>{{ trainingModalOpened?.label }}</b></span
+              >
+            </h5>
+          </div>
+          <div>
+            <table class="table">
+              <tr *ngFor="let operator of operators">
+                <td>
+                  <div
+                    *ngIf="
+                      operator.userProfilePicture?.mediaUrl;
+                      else anonymous
+                    "
+                    [title]="
+                      operator.userFirstName + ' ' + operator.userLastName
+                    "
+                  >
+                    <img
+                      [src]="apiUrl + operator.userProfilePicture.mediaUrl"
+                      class="operator-avatar"
+                    />
+                  </div>
+                  <ng-template #anonymous>
+                    <div
+                      class="operator-avatar"
+                      [title]="
+                        operator.userFirstName + ' ' + operator.userLastName
+                      "
+                    >
+                      <img src="assets/img/anonymous.png" />
+                    </div>
+                  </ng-template>
+                </td>
+                <td>
+                  {{ operator.userFirstName + " " + operator.userLastName }}
+                </td>
+                <td>
+                  <div class="checkbox">
+                    <input
+                      [checked]="operator.alreadyRequestedForTheTraining"
+                      [disabled]="operator.alreadyRequestedForTheTraining"
+                      class="ml-2 mb-2"
+                      (change)="onCheckOperator(operator)"
+                      type="checkbox"
+                    />
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center">
+          <button
+            type="submit"
+            class="btn btn-round cancel"
+            (click)="closeModal()"
+          >
+            Fermer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #empty>
+  <p *ngIf="managingSubTrainings">Aucune sous formation a été trouvée !</p>
+</ng-template>

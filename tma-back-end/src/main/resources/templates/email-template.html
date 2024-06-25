@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        .header {
+            background-color: #FFFF00;
+            padding: 10px;
+            text-align: center;
+        }
+        .header img {
+            max-width: 200px;
+        }
+        .body-content {
+            margin: 20px 0;
+            color: #333;
+        }
+        .footer {
+            background-color: #000; /* Sartorius black */
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #ffcc00; /* Sartorius yellow */
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img src="cid:logo" alt="Sartorius Logo">
+    </div>
+    <div class="body-content">
+        <h2>Hello, {{userFirstName}}</h2>
+        <p>Your User ID in Sartorius is <strong>{{userIdentifier}}</strong>.</p>
+        <p>Welcome to the Sartorius management platform. To login to your session, use the following information:</p>
+        <p>Your login is: <strong>{{userEmail}}</strong></p>
+        <p>Your new password is: <strong>{{password}}</strong></p>
+        <p>Please keep it secure and you can change it after you login to your account.</p>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 Sartorius. All rights reserved.</p>
+        <p><a href="https://www.sartorius.com">Visit our website</a></p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<div class="card shadow training">
+  <h1 style="font-size: 1.5rem">{{ title }}</h1>
+  <div class="training_durations">
+    <p *ngIf="duration"><b>Durée :</b> {{ duration }} H</p>
+    <p *ngIf="lifeDuration"><b>Durée de vie :</b> {{ lifeDuration }} Mois</p>
+  </div>
+  <p>{{ description }}</p>
+  <hr />
+  <div class="row">
+    <div class="col-9 training_trainers">
+      <div
+        class="training_trainer-pic-container pl-3 pr-2"
+        *ngFor="let trainer of trainersList"
+      >
+        <div
+          *ngIf="trainer.picture?.mediaUrl; else anonymous"
+          [title]="trainer.fullName"
+        >
+          <img
+            [src]="apiUrl + trainer.picture.mediaUrl"
+            class="training_trainer-pic"
+          />
+        </div>
+        <ng-template #anonymous>
+          <div class="training_trainer-pic" [title]="trainer.fullName">
+            <img src="assets/img/anonymous.png" class="img pic-profile" />
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <div class="col-3 training-action">
+      <button
+        type="submit"
+        class="btn btn-primary btn-round"
+        (click)="onAction()"
+      >
+        <i
+          *ngIf="actionName === CONSULT_SUB_TRAININGS"
+          class="fa fa-eye icon"
+        ></i>
+        <i *ngIf="actionName === ASSIGN_OPERATORS" class="fa fa-plus icon"></i>
+        {{ actionName }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,118 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="row pl-lg-5 pr-lg-5 header-row">
+          <h4 class="card-title">Mes demandes des formations</h4>
+        </div>
+        <div
+          class="row pl-lg-5 pr-lg-5 d-flex align-items-center justify-content-center"
+        >
+          <div class="filter">
+            <select
+              (change)="onChangeOptions($event)"
+              [id]="TRAINING_FILTER_ELEMENT_ID"
+            >
+              <option [value]="DEFAULT_FILTER_VALUE">
+                Filtrer par formation..
+              </option>
+              <ng-container *ngFor="let option of trainingsFilterOptions">
+                <option [value]="option.trainingTypeUuid">
+                  {{ option.label }}
+                </option>
+              </ng-container>
+            </select>
+            <select
+              [disabled]="selectedTrainingId == DEFAULT_FILTER_VALUE"
+              (change)="onChangeOptions($event)"
+              [id]="SUB_TRAINING_FILTER_ELEMENT_ID"
+            >
+              <option [value]="DEFAULT_FILTER_VALUE">
+                Filtrer par sous-formation..
+              </option>
+              <ng-container *ngFor="let option of subTrainingsFilterOptions">
+                <option [value]="option.uuid">{{ option.label }}</option>
+              </ng-container>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div
+          class="table-responsive"
+          *ngIf="currentPageContent?.items?.length != 0; else emptyTemplate"
+        >
+          <table class="table">
+            <thead class="text-primary">
+              <th class="label" style="width: 22%">Formation</th>
+              <th style="width: 22%">Sous-Formation</th>
+              <th style="width: 15%">Chéf d'équipe</th>
+              <th style="width: 15%">Opérateur</th>
+              <th style="width: 10%">Date</th>
+              <th style="width: 6%">Statut</th>
+              <th style="width: 10%">Annuler</th>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let request of currentPageContent?.items
+                    | paginate
+                      : {
+                          itemsPerPage: PAGE_SIZE,
+                          currentPage: currentPageNumber,
+                          totalItems: currentPageContent?.count
+                        }
+                "
+              >
+                <td>{{ request?.trainingType?.name }}</td>
+                <td>{{ request?.trainingSubType?.name || "-" }}</td>
+                <td>{{ request?.teamLeader?.name }}</td>
+                <td>{{ request?.operator?.name }}</td>
+                <td>{{ request?.requestDate }}</td>
+                <td style="text-align: center">
+                  <span
+                    *ngIf="request.status === 'REQUESTED'"
+                    class="badge status-new"
+                    >DEMANDÉ</span
+                  >
+                  <span
+                    *ngIf="request.status === 'SESSION_PLANNED'"
+                    class="badge status-negotiation"
+                    >Session planifiée</span
+                  >
+                  <span
+                    *ngIf="request.status === 'SESSION_IN_PROGRESS'"
+                    class="badge status-active"
+                    >Session en cours</span
+                  >
+                  <span
+                    *ngIf="request.status === 'SESSION_FINISHED'"
+                    class="badge status-active"
+                    >Session terminé</span
+                  >
+                </td>
+                <td>
+                  <div *ngIf="request.status === 'REQUESTED'">
+                    <button class="btn btn-danger btn-round btn-sm" 
+                            (click)="onCancelOperator(request.trainingType.uuid, request.operator.uuid)">
+                      Annuler demande
+                    </button>
+                  </div>
+                </td>
+                               
+            </tbody>
+          </table>
+        </div>
+        <ng-template #emptyTemplate>
+          Aucune demande a été trouvée!
+        </ng-template>
+
+        <div *ngIf="currentPageContent?.items?.length > 0" class="mt-3 align">
+          <pagination-controls
+            (pageChange)="onPageChange($event)"
+          ></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

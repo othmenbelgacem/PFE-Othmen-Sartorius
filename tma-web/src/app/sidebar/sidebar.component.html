@@ -1,0 +1,25 @@
+<!-- sidebar.component.html -->
+<div class="sidebar-wrapper">
+  <div class="logo">
+    <a href="http://localhost:4200/" class="simple-text logo-mini">
+      <div class="logo-image-small">
+        <img src="assets/img/logo.jpeg" />
+      </div>
+    </a>
+    <a class="simple-text logo-normal" style="visibility: hidden"> Sartorius</a>
+  </div>
+
+  <ul class="nav">
+    <li
+      *ngFor="let menuItem of menuItems"
+      routerLinkActive="active"
+      class="item {{ menuItem.class }}"
+    >
+      <a *ngIf="!menuItem.hidden" [routerLink]="[menuItem.path]">
+        <i class="{{ menuItem.icon }}"></i>
+        <p>{{ menuItem.title }} <span *ngIf="menuItem.badge !== undefined" class="badge badge-danger" style="border-radius: 50%; padding: 5px 10px;">{{ menuItem.badge }}</span></p>
+        
+      </a>
+    </li>
+  </ul>
+</div>

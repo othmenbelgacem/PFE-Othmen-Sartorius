@@ -1,0 +1,276 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="row pl-3 pr-3 header-row">
+          <h4 class="card-title">Liste des formateurs</h4>
+          <div class="update">
+            <button
+              type="submit"
+              (click)="onAdd()"
+              class="btn btn-primary btn-round"
+            >
+              Ajouter un formateur
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div
+          *ngIf="userList.length != 0; else emptyTemplate"
+          class="table-responsive"
+        >
+          <table class="table">
+            <thead class="text-primary">
+              <th></th>
+              <th>Matricule</th>
+              <th>Nom complet</th>
+              <th>Email</th>
+              <th>Numéro de telephone</th>
+              <th class="text-right">Action</th>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let user of userList
+                    | paginate
+                      : {
+                          itemsPerPage: pageSize,
+                          currentPage: page,
+                          totalItems: collectionSize
+                        }
+                "
+              >
+                <td>
+                  <div class="profile-edit-photo pl-3 pr-2">
+                    <div
+                      *ngIf="
+                        user.userProfilePicture != null &&
+                          user.userProfilePicture.mediaUrl;
+                        else anonymous
+                      "
+                      class="profile-pic"
+                    >
+                      <img
+                        [src]="user.userProfilePicture.mediaUrl"
+                        class="img pic-profile"
+                      />
+                    </div>
+                    <ng-template #anonymous>
+                      <div
+                        *ngIf="urlUserPhoto == null"
+                        id="profileImageEdit"
+                        class="profile-pic"
+                      >
+                        <img
+                          src="assets/img/anonymous.png"
+                          class="img pic-profile"
+                        />
+                      </div>
+                    </ng-template>
+                  </div>
+                </td>
+                <td>{{user.identifier}}</td>
+                <td>{{ user.userFirstName }} {{ user.userLastName }}</td>
+                <td>{{ user.userEmail }}</td>
+                <td *ngIf="user.userPhoneNumber != null">
+                  {{ user.userPhoneNumber }}
+                </td>
+                <td *ngIf="user.userPhoneNumber == null">Non Défini</td>
+                <td class="text-right">
+                  <i
+                    class="fa fa-pencil-square-o mr-3 primary-icon action-icon"
+                    (click)="onEdit(user)"
+                  ></i>
+                  <i
+                    class="fa fa-trash mr-3 danger-icon action-icon"
+                    (click)="onDelete(user)"
+                  ></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #emptyTemplate>
+          Aucun formateur a été trouvé!
+        </ng-template>
+
+        <div *ngIf="userList.length > 0" class="mt-3 align">
+          <pagination-controls
+            (pageChange)="onPageChange($event)"
+          ></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #modalContent let-c="close" let-d="dismiss">
+    <div class="modal-body body-model" [dir]="direction">
+      <div class="mod-body">
+        <div class="col-md-12">
+          <div class="card-user">
+            <div class="card-header">
+              <h5 class="card-title">{{ modalTitle }}</h5>
+            </div>
+            <div class="card-body">
+              <form id="form" role="form" #testForm="ngForm" ngNativeValidate>
+                <div>
+                  <div
+                    class="row uploaddiv d-flex align-items-center flex-nowrap"
+                  >
+                    <div class="profile-edit-photo pl-3 pr-2">
+                      <div *ngIf="urlUserPhoto != null" class="profile-pic">
+                        <img [src]="urlUserPhoto" class="img" />
+                      </div>
+                      <div
+                        *ngIf="urlUserPhoto == null"
+                        id="profileImageEdit"
+                        class="profile-pic"
+                      >
+                        <img src="assets/img/anonymous.png" class="img" />
+                      </div>
+                    </div>
+                    <div class="edit-photo-actions d-flex">
+                      <button
+                        type="button"
+                        class="btn btn-primary btn-round"
+                        (click)="profilePicture.click()"
+                      >
+                        Telecharger une image
+                      </button>
+                      <button
+                        class="btn btn-round btn-default"
+                        (click)="deletePhoto()"
+                      >
+                        Supprimer
+                      </button>
+                    </div>
+                  </div>
+                  <input
+                    #profilePicture
+                    type="file"
+                    id="myfilephoto"
+                    name="myfilephoto"
+                    (change)="onSelectFile($event)"
+                    class="input-file"
+                    accept="image/*"
+                    class="input-file"
+                  />
+                </div>
+                <div class="row">
+                  <div class="col-md-12 pr-1">
+                    <div class="form-group">
+                      <label>Matricule</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Matricule"
+                        required
+                        [(ngModel)]="userRequest.identifier"
+                        name="identifier"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6 pr-1">
+                    <div class="form-group">
+                      <label>Nom</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Nom"
+                        required
+                        [(ngModel)]="userRequest.userFirstName"
+                        name="userFirstName"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6 pl-1">
+                    <div class="form-group">
+                      <label>Prénom</label>
+                      <input
+                        required
+                        type="text"
+                        class="form-control"
+                        placeholder="Prénom"
+                        [(ngModel)]="userRequest.userLastName"
+                        name="userLastName"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label>Email</label>
+                      <input
+                        required
+                        type="text"
+                        class="form-control"
+                        placeholder="Email"
+                        [(ngModel)]="userRequest.userEmail"
+                        name="userEmail"
+                        pattern="[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}$"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 pr-1">
+                    <div class="form-group">
+                      <label>Numéro de télephone</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Numéro de télephone"
+                        [(ngModel)]="userRequest.userPhoneNumber"
+                        name="userPhoneNumber"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12 pr-1">
+                    <div class="form-group">
+                      <label>A propos ce formateur</label>
+                      <textarea
+                        type="text"
+                        class="form-control"
+                        placeholder="A propos ce formateur"
+                        [(ngModel)]="userRequest.about"
+                        name="about"
+                      >
+                      </textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="update ml-auto mr-2">
+                    <button
+                      type="button"
+                      class="btn btn-round cancel"
+                      (click)="d('Cross click')"
+                    >
+                      Annuler
+                    </button>
+                  </div>
+                  <div class="update ml-auto mr-auto">
+                    <button
+                      type="submit"
+                      class="btn btn-primary btn-round"
+                      (click)="onSaveUser()"
+                    >
+                      Enregistrer
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

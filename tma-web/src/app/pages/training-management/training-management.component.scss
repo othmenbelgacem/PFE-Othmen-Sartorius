@@ -1,0 +1,90 @@
+.header-row {
+  justify-content: space-between;
+}
+
+::ng-deep .modal-backdrop {
+  z-index: 1040 !important;
+}
+
+:host ::ng-deep ng-select ng-dropdown-panel {
+  z-index: 9999999;
+}
+
+:host ::ng-deep ng-select .ng-dropdown-panel {
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08) !important;
+  border-radius: 8px !important;
+}
+
+select {
+  padding: 9px;
+  border: 1px solid #dddddd;
+}
+
+input {
+  font-size: 14px;
+}
+
+.input-file {
+  display: none;
+}
+
+.card-header {
+  padding: 10px 4px 1px 12px !important;
+  background-color: white;
+}
+
+.align {
+  text-align: center;
+}
+
+.primary-icon {
+  color: black;
+}
+
+.danger-icon {
+  color: #ef8157;
+}
+
+.radio {
+  accent-color: yellow !important;
+}
+
+$circleSize: 30px;
+
+.circle {
+  display: inline-block;
+  width: $circleSize;
+  height: $circleSize;
+  background-color: yellow;
+  border-radius: 50%;
+  color: black;
+  text-align: center;
+  line-height: $circleSize;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.label {
+  width: 30%;
+}
+
+::ng-deep .p-multiselect.p-multiselect-chip .p-multiselect-token {
+  background: #6c757d24 !important;
+}
+::ng-deep
+  .p-multiselect-panel
+  .p-multiselect-items
+  .p-multiselect-item.p-highlight {
+  background: #6c757d24 !important;
+}
+::ng-deep
+  .p-checkbox:not(.p-checkbox-disabled)
+  .p-checkbox-box.p-highlight:hover {
+  border-color: yellow !important;
+  background: yellow !important;
+}
+::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
+  border-color: yellow !important;
+  background: yellow !important;
+}

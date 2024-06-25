@@ -1,0 +1,212 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <div class="row pl-3 pr-3 header-row">
+          <h4 class="card-title">
+            Sous formations attribuées à <b>{{ trainingTypeLabel }}</b>
+          </h4>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-xl-6 col-md-6 col-12 mb-1">
+            <div class="form-group">
+              <label for="basicInput">Chercher des sous formations</label>
+              <input
+                type="text"
+                class="form-control"
+                id="basicInput"
+                placeholder="Saisir un text"
+                (keyup)="search($event)"
+                [(ngModel)]="searchText"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="trainingSubTypeList.length != 0; else emptyTemplate1"
+          class="table-responsive"
+        >
+          <table class="table">
+            <thead class="text-primary">
+              <th style="width: 20%">Libellé</th>
+              <th style="width: 30%">Détails</th>
+              <th style="width: 10%">Durée</th>
+              <th style="width: 10%">Durée de vie</th>
+              <th class="text-right" style="width: 15%">Action</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let trainingSubType of trainingSubTypeList">
+                <td>{{ trainingSubType.label }}</td>
+                <td>
+                  {{
+                    trainingSubType.details !== null &&
+                    trainingSubType.details !== ""
+                      ? trainingSubType.details
+                      : "-"
+                  }}
+                </td>
+                <td>
+                  <span *ngIf="trainingSubType.hourDuration != 0"
+                    >{{ trainingSubType.hourDuration }} heures</span
+                  >
+                  <span *ngIf="trainingSubType.hourDuration == 0">-</span>
+                </td>
+                <td>
+                  <span *ngIf="trainingSubType.lifeDuration != 0"
+                    >{{ trainingSubType.lifeDuration }} mois</span
+                  >
+                  <span *ngIf="trainingSubType.lifeDuration == 0">-</span>
+                </td>
+                <td class="text-right">
+                  <i
+                    class="fa fa-pencil-square-o mr-3 primary-icon action-icon"
+                    (click)="onEdit(trainingSubType)"
+                  ></i>
+                  <i
+                    class="fa fa-trash mr-3 danger-icon action-icon"
+                    (click)="onDeleteTrainingSubType(trainingSubType.uuid)"
+                  ></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #emptyTemplate1>
+          <div class="row">Aucune sous formation a été trouvée!</div>
+        </ng-template>
+        <div class="row">
+          <div class="col text-center">
+            <button
+              type="submit"
+              class="btn cancel btn-round"
+              (click)="cancel()"
+            >
+              Retour
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #modalContent let-c="close" let-d="dismiss">
+  <div class="modal-body body-model" [dir]="direction">
+    <div class="mod-body">
+      <div class="col-md-12">
+        <div class="card-training">
+          <div class="card-header">
+            <h5 class="card-title">{{ modalTitle }}</h5>
+          </div>
+          <div class="card-body">
+            <form id="form" role="form" #testForm="ngForm" ngNativeValidate>
+              <div class="row">
+                <div class="col-md-12 pr-1">
+                  <div class="form-group">
+                    <label
+                      >Modifier la sous-formation de la formation
+                      <b>{{ trainingTypeLabel }}</b>
+                    </label>
+                    <br /><label>Libellé</label>
+                    <textarea
+                      required
+                      type="text"
+                      class="form-control"
+                      placeholder="Libellé"
+                      [(ngModel)]="trainingSubTypeRequest.label"
+                      name="label"
+                    >
+                    </textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 pr-1">
+                  <div class="form-group">
+                    <label>Détails</label>
+                    <textarea
+                      type="text"
+                      class="form-control"
+                      placeholder="Détails"
+                      [(ngModel)]="trainingSubTypeRequest.details"
+                      name="details"
+                    >
+                    </textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 pr-1">
+                  <div class="form-group">
+                    <label>Durée (en heures)</label>
+                    <input
+                      required
+                      type="number"
+                      class="form-control"
+                      placeholder="Durée"
+                      [(ngModel)]="trainingSubTypeRequest.hourDuration"
+                      name="hourDuration"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 pr-1">
+                  <div class="form-group">
+                    <label>Durée de vie (en mois)</label>
+                    <input
+                      required
+                      type="number"
+                      min="0"
+                      class="form-control"
+                      placeholder="Durée de vie"
+                      [(ngModel)]="trainingSubTypeRequest.lifeDuration"
+                      name="lifeDuration"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Formateur</label>
+                    <p-multiSelect
+                      [style]="{ width: '100%' }"
+                      [options]="trainerList"
+                      [(ngModel)]="selectedTrainers"
+                      optionLabel="userFullName"
+                      display="chip"
+                      [showClear]="true"
+                    >
+                    </p-multiSelect>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="update ml-auto mr-2">
+                  <button
+                    type="button"
+                    class="btn btn-round cancel"
+                    (click)="d('Cross click')"
+                  >
+                    Annuler
+                  </button>
+                </div>
+                <div class="update ml-auto mr-auto">
+                  <button
+                    type="submit"
+                    class="btn btn-primary btn-round"
+                    (click)="onUpdateSubTraining()"
+                  >
+                    Enregistrer
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
