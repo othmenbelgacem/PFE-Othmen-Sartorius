@@ -19,18 +19,10 @@ import { NgxPaginationModule } from "ngx-pagination";
 import { AddMembersComponent } from "./pages/teams-managment/add-members/add-members.component";
 import { SweetAlert2Module } from "@sweetalert2/ngx-sweetalert2";
 import { LoginComponent } from "./pages/auth/login/login.component";
-import { EnterpriseOKRComponent } from "./pages/enterprise-okr/enterprise-okr.component";
-import { OkrManagmentComponent } from "./pages/enterprise-okr/okr-managment/okr-managment.component";
-import { TeamOKRComponent } from "./pages/team-okr/team-okr.component";
 import { AccordionModule } from "primeng/accordion";
 import { InterceptorService } from "./shared/interceptor/interceptor.service";
-import { TeamOkrManagmentComponent } from "./pages/team-okr/team-okr-managment/team-okr-managment.component";
-import { CompanyOkrKeyResultsComponent } from "./pages/team-okr/company-okr-key-results/company-okr-key-results.component";
-import { TeamOkrKeyResultsComponent } from "./pages/team-okr/team-okr-key-results/team-okr-key-results.component";
 import { MultiSelectModule } from "primeng/multiselect";
-import { TasksManagementComponent } from "./pages/task/tasks-management/tasks-management.component";
-import { CKEditorModule } from "ckeditor4-angular";
-import { TaskDetailsComponent } from "./pages/task/task-details/task-details.component";
+import { CKEditorModule } from "ckeditor4-angular";;
 import { NewPasswordComponent } from "./pages/auth/new-password/new-password.component";
 import { UserProfileComponent } from "./pages/user-profile/user-profile.component";
 import { TrainersManagementComponent } from "./pages/trainers-management/trainers-management.component";
@@ -54,14 +46,6 @@ import {MatBadgeModule} from "@angular/material/badge"
     TeamsManagmentComponent,
     AddMembersComponent,
     LoginComponent,
-    EnterpriseOKRComponent,
-    OkrManagmentComponent,
-    TeamOKRComponent,
-    TeamOkrManagmentComponent,
-    CompanyOkrKeyResultsComponent,
-    TeamOkrKeyResultsComponent,
-    TasksManagementComponent,
-    TaskDetailsComponent,
     NewPasswordComponent,
     UserProfileComponent,
     TrainersManagementComponent,
@@ -89,7 +73,6 @@ import {MatBadgeModule} from "@angular/material/badge"
     ToastrModule.forRoot(),
     FooterModule,
     FixedPluginModule,
-    //ToastrModule.forRoot({ timeOut: 3000, positionClass: "toast-top-right" }),
     SweetAlert2Module.forRoot(),
     NgxPaginationModule,
     AccordionModule,
