@@ -21,14 +21,11 @@ public class UserRequest {
 
 	private UUID userUuid;
 	private String userEmail;
-	@Pattern(regexp = "^\\d{8}$", message = "Phone number must be 8 digits")
 	private String userPhoneNumber;
 	private String userPassword;
 	private String userFirstName;
 	private String userLastName;
-	@Pattern(regexp = "^[0-9]+$", message = "Matricule must be a number")
 	private String identifier;
-;
 	private RoleCode role;
 	private AddressDto userAddress;
 	private MultipartFile profilePicture;

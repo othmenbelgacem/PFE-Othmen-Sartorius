@@ -223,10 +223,10 @@
                         pattern="^[0-9]*$"
                       />
                       <div *ngIf="identifier.errors?.required && identifier.touched" class="error" style="color: red;">
-                        Matricule is required.
+                        Le matricule est requis.
                       </div>
                       <div *ngIf="identifier.errors?.pattern && identifier.touched" class="error" style="color: red;">
-                        Matricule must be numeric.
+                        Le matricule doit être numérique.
                       </div>
                     </div>
                   </div>
@@ -247,10 +247,10 @@
                         pattern="[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}$"
                       />
                       <div *ngIf="userEmail.errors?.required && userEmail.touched" class="error" style="color: red;">
-                        Email is required.
+                        Un e-mail est requis.
                       </div>
                       <div *ngIf="userEmail.errors?.pattern && userEmail.touched" class="error" style="color: red;">
-                        Invalid email format.
+                        Format d'email invalide.
                       </div>
                     </div>
                   </div>
@@ -270,10 +270,10 @@
                         pattern="^[0-9]{8}$"
                       />
                       <div *ngIf="userPhoneNumber.errors?.required && userPhoneNumber.touched" class="error" style="color: red;">
-                        Phone number is required.
+                        Le numéro de téléphone est requis.
                       </div>
                       <div *ngIf="userPhoneNumber.errors?.pattern && userPhoneNumber.touched" class="error" style="color: red;">
-                        Phone number must be 8 digits.
+                        Le numéro de téléphone doit comporter 8 chiffres.
                       </div>
                     </div>
                   </div>

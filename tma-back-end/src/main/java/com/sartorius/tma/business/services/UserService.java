@@ -216,7 +216,7 @@ public class UserService {
 				case OPERATOR:
 					Operator operator = new Operator(user);
 					UUID opera = operatorRepository.save(operator).getUuid();
-					//sendPasswordEmail(opera, password);
+					sendPasswordEmail(opera, password);
 					break;
 				case ADMINISTRATOR:
 					Administrator admin = new Administrator(user);

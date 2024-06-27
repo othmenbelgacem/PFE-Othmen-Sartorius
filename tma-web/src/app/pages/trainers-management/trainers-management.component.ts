@@ -12,7 +12,7 @@ import { UserService } from "app/service/user/user.service";
 import { UtilsService } from "app/service/utils.service";
 import { ToastrService } from "ngx-toastr";
 import Swal from "sweetalert2";
-
+import { NgForm } from '@angular/forms';
 @Component({
   selector: "trainers-management",
   templateUrl: "./trainers-management.component.html",
@@ -94,12 +94,18 @@ export class TrainersManagementComponent implements OnInit {
     }
   }
 
-  onSaveUser() {
+  onSaveUser(testForm: NgForm) {
+    if (testForm.invalid) {
+      // Form is invalid, do not proceed
+      return;
+  }
     if (
       !this.isEmpty(this.userRequest.userEmail) &&
       !this.isEmpty(this.userRequest.userFirstName) &&
       !this.isEmpty(this.userRequest.userLastName)
     ) {
+      this.trainerService.isMatriculeUnique(this.userRequest.identifier).subscribe((isUnique) => {
+        if (isUnique) {
       const formdata = new FormData();
       formdata.append("identifier",this.userRequest.identifier);
       formdata.append("userEmail", this.userRequest.userEmail);
@@ -110,6 +116,7 @@ export class TrainersManagementComponent implements OnInit {
       if (this.userPhoto) {
         formdata.append("profilePicture", this.userPhoto);
       }
+
       if (this.addOrUpdateMode == 0) {
         this.trainerService.saveUser(formdata).subscribe((res) => {
           this.modal.dismissAll();
@@ -119,23 +126,20 @@ export class TrainersManagementComponent implements OnInit {
       } else if (this.addOrUpdateMode == 1) {
         formdata.append("userUuid", this.userRequest.userUuid);
         this.trainerService.updateUser(formdata).subscribe((res) => {
-          if (
-            this.userRequest.userProfilePicture != null &&
-            this.urlUserPhoto === null
-          ) {
-            this.removePicture(
-              this.userRequest.userUuid,
-              MediaContext[MediaContext.PICTURE_PROFIL]
-            );
+          if (this.userRequest.userProfilePicture != null && this.urlUserPhoto === null) {
+            this.removePicture(this.userRequest.userUuid, MediaContext[MediaContext.PICTURE_PROFIL]);
           }
           this.getAllUser();
           this.modal.dismissAll();
           this.showSuccess("Employé modifié avec succès");
         });
       }
+    } else {
+      this.showError("Matricule déjà existant.");
     }
-  }
-
+  });
+}
+}
   onEdit(user) {
     this.urlUserPhoto = null;
     this.modalTitle = "Modifier un formateur";

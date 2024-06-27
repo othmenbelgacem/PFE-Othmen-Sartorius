@@ -133,7 +133,7 @@ getAllUser() {
             });
           }
         } else {
-          this.showError("Matricule already exists.");
+          this.showError("Matricule déjà existant.");
         }
       });
     }

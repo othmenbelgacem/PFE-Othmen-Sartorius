@@ -20,6 +20,7 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
 
 	Optional<Trainer> findByUserEmail(String userEmail);
 	Optional<Trainer> findByUuid(UUID uuid);
+	User findByIdentifier(String identifier);
 	 Page<Trainer> findByRoleRoleCode(RoleCode roleCode, Pageable pageable);
 	 List<Trainer> findByTrainingTypes(TrainingType trainingType);
 	 List<Trainer> findByTrainingSubTypes(TrainingSubType trainingSubType);

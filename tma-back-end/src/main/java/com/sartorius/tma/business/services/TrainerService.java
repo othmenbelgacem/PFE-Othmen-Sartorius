@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.sartorius.tma.business.services.email.EmailService;
+import com.sartorius.tma.persistence.repositories.*;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -29,10 +30,6 @@ import com.sartorius.tma.persistence.entities.Trainer;
 import com.sartorius.tma.persistence.entities.TrainingSubType;
 import com.sartorius.tma.persistence.entities.TrainingType;
 import com.sartorius.tma.persistence.entities.User;
-import com.sartorius.tma.persistence.repositories.RoleRepository;
-import com.sartorius.tma.persistence.repositories.TrainerRepository;
-import com.sartorius.tma.persistence.repositories.TrainingSubTypeRepository;
-import com.sartorius.tma.persistence.repositories.TrainingTypeRepository;
 import com.sartorius.tma.utils.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -52,6 +49,7 @@ public class TrainerService {
 	private final TrainerMapper trainerMapper;
 	private final UserService UserService;
 	private final EmailService emailService;
+	private  final UserRepository userRepository;
 	public List<TrainerDetails> getAllTrainers() {
 		return this.trainerRepository.findAll().stream().map(trainerMapper::toUserDetailsResponse).collect(Collectors.toList());
 	}
@@ -82,6 +80,9 @@ public class TrainerService {
 			sendPasswordEmail(userUuid,password);
 
 		}
+	}
+	public boolean isMatriculeUnique(String identifier) {
+		return trainerRepository.findByIdentifier(identifier) == null;
 	}
 	public void sendPasswordEmail(UUID userUuid, String password) {
 		try {
