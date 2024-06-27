@@ -12,16 +12,7 @@ import com.sartorius.tma.enumeration.RoleCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -60,10 +51,16 @@ public class UserController {
   public UserDetails getUserProfile() {
     return this.userService.getUserInfo();
   }
-  @PostMapping(value="/add-new-user",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(value = "/add-new-user", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public void saveOwner(@ModelAttribute UserRequest userRequest) {
-	  if(userRequest.getUserPhoneNumber().equals("undefined") || userRequest.getUserPhoneNumber().isEmpty()) userRequest.setUserPhoneNumber(null);
-       this.userService.saveUser(userRequest);
+    if (userRequest.getUserPhoneNumber().equals("undefined") || userRequest.getUserPhoneNumber().isEmpty())
+      userRequest.setUserPhoneNumber(null);
+    this.userService.saveUser(userRequest);
+  }
+
+  @GetMapping("/is-matricule-unique/{identifier}")
+  public boolean isMatriculeUnique(@PathVariable String identifier) {
+    return userService.isMatriculeUnique(identifier);
   }
 
   @PatchMapping(value="/update-user",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

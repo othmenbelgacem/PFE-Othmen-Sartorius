@@ -93,4 +93,8 @@ export class UserService {
   getUserInfo(): Observable<UserDetailsModel> {
     return this.http.get<UserDetailsModel>(`${this.USER_API}/user-profile`);
   }
+  
+  isMatriculeUnique(identifier: string): Observable<boolean> {
+    return this.http.get<boolean>(`${this.USER_API}/is-matricule-unique/${identifier}`);
+  }
 }

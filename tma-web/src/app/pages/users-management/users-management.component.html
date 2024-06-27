@@ -218,7 +218,16 @@
                         placeholder="Matricule"
                         [(ngModel)]="userRequest.identifier"
                         name="identifier"
+                        #identifier="ngModel"
+                        required
+                        pattern="^[0-9]*$"
                       />
+                      <div *ngIf="identifier.errors?.required && identifier.touched" class="error" style="color: red;">
+                        Matricule is required.
+                      </div>
+                      <div *ngIf="identifier.errors?.pattern && identifier.touched" class="error" style="color: red;">
+                        Matricule must be numeric.
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -234,22 +243,38 @@
                         placeholder="Email"
                         [(ngModel)]="userRequest.userEmail"
                         name="userEmail"
+                        #userEmail="ngModel"
                         pattern="[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,15}$"
                       />
+                      <div *ngIf="userEmail.errors?.required && userEmail.touched" class="error" style="color: red;">
+                        Email is required.
+                      </div>
+                      <div *ngIf="userEmail.errors?.pattern && userEmail.touched" class="error" style="color: red;">
+                        Invalid email format.
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-6 pr-1">
                     <div class="form-group">
-                      <label>Numéro de télephone</label>
+                      <label>Numéro de téléphone</label>
                       <input
                         type="text"
                         class="form-control"
-                        placeholder="Numéro de télephone"
+                        placeholder="Numéro de téléphone"
                         [(ngModel)]="userRequest.userPhoneNumber"
                         name="userPhoneNumber"
+                        #userPhoneNumber="ngModel"
+                        required
+                        pattern="^[0-9]{8}$"
                       />
+                      <div *ngIf="userPhoneNumber.errors?.required && userPhoneNumber.touched" class="error" style="color: red;">
+                        Phone number is required.
+                      </div>
+                      <div *ngIf="userPhoneNumber.errors?.pattern && userPhoneNumber.touched" class="error" style="color: red;">
+                        Phone number must be 8 digits.
+                      </div>
                     </div>
                   </div>
                   <div class="col-md-6 pl-1">
@@ -289,7 +314,7 @@
                     <button
                       type="submit"
                       class="btn btn-primary btn-round"
-                      (click)="onSaveUser()"
+                      (click)="onSaveUser(testForm)"
                     >
                       Enregistrer
                     </button>

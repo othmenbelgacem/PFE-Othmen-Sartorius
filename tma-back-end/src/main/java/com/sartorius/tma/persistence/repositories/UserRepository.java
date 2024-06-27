@@ -16,7 +16,8 @@ import com.sartorius.tma.persistence.entities.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
   Optional<User> findByUserEmail(String email);
-  Optional<User> findByIdentifier(String identifier);
+  boolean existsByIdentifier(String identifier);
+  User findByIdentifier(String identifier);
   Optional<User> findByUserPhoneNumber(String phoneNumber);
   List<User> findByRoleRoleCode(RoleCode roleCode);
   Page<User> findByRoleRoleCodeAndRoleRoleCodeNot(RoleCode roleCode, RoleCode roleCode2, Pageable pageable);

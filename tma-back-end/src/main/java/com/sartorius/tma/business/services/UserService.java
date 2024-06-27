@@ -192,13 +192,13 @@ public class UserService {
 			user.setUserFirstName(userIn.getUserFirstName());
 			user.setUserLastName(userIn.getUserLastName());
 			String randomString = generateRandomString(5);
-			String password=userIn.getUserFirstName()+"-"+userIn.getUserLastName()+ "-" + randomString;
+			String password = userIn.getUserFirstName() + "-" + userIn.getUserLastName() + "-" + randomString;
 			user.setUserPassword(encoder.encode(password));
 			user.setUserPhoneNumber(userIn.getUserPhoneNumber());
 			user.setIdentifier(userIn.getIdentifier());
 			Role userRole = roleRepository.findByRoleCode(userIn.getRole());
 			user.setRole(userRole);
-			if (userIn.getProfilePicture()!=null ) {
+			if (userIn.getProfilePicture() != null) {
 				try {
 					Media media = mediaService.saveMedia(userIn.getProfilePicture(), MediaContext.PICTURE_PROFIL);
 					user.getMedias().add(media);
@@ -207,30 +207,30 @@ public class UserService {
 				}
 			}
 
-			switch(userRole.getRoleCode()) {
-				case MANAGER -> {
+			switch (userRole.getRoleCode()) {
+				case MANAGER:
 					TeamLeader manager = new TeamLeader(user);
-				UUID teamleader = teamLeaderRepository.save(manager).getUuid();
-					sendPasswordEmail(teamleader,password);
-
-				}
-				case OPERATOR -> {
+					UUID teamleader = teamLeaderRepository.save(manager).getUuid();
+					sendPasswordEmail(teamleader, password);
+					break;
+				case OPERATOR:
 					Operator operator = new Operator(user);
-					UUID opera = 	operatorRepository.save(operator).getUuid();
-					sendPasswordEmail(opera,password);
-				}
-				case ADMINISTRATOR -> {
+					UUID opera = operatorRepository.save(operator).getUuid();
+					//sendPasswordEmail(opera, password);
+					break;
+				case ADMINISTRATOR:
 					Administrator admin = new Administrator(user);
 					UUID admino = adminRepository.save(admin).getUuid();
-					sendPasswordEmail(admino,password);
-				}
+					sendPasswordEmail(admino, password);
+					break;
 			}
-
-			//UUID userUuid=userRepository.save(user).getUuid();
-			//sendPasswordEmail(userUuid,password);
-
 		}
 	}
+
+	public boolean isMatriculeUnique(String identifier) {
+		return userRepository.findByIdentifier(identifier) == null;
+	}
+
 
 	public User saveOrUpdateUser(User user) {
 		return this.userRepository.save(user);
