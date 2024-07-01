@@ -18,10 +18,13 @@
             <thead class="text-primary">
               <th class="label" style="width: 15%">Formation</th>
               <th style="width: 15%">Sous-Formation</th>
-              <th style="width: 10%">Formateur</th>
+              <th *ngIf="!isTrainer()" style="width: 10%">Formateur</th>
               <th *ngIf="!isCollaborator()" style="width: 10%">Operateurs</th> 
               <th style="width: 15%">Date début</th>
               <th style="width: 15%">Date fin</th>
+              <th style="width: 8%">Heure de début</th>
+              <th style="width: 8%">Place</th>
+
               <th *ngIf="showOperator" style="width: 10%">Opérateurs</th>
               <th style="width: 8%">Statut</th>
               <th *ngIf="isTrainer()" style="width: 10%">Actions</th> 
@@ -39,11 +42,13 @@
                 }">
                 <td>{{ session?.training?.label }}</td>
                 <td>{{ session?.subTraining?.label || "-" }}</td>
-                <td>{{ session?.trainer.userFullName }}</td>
+                <td *ngIf="!isTrainer()">{{ session?.trainer.userFullName }}</td>
                 <td *ngIf="!isCollaborator()"><i class="fa fa-users primary-icon action-icon" (click)="openMemberModal(session)"></i></td> 
                 <td *ngIf="showOperator">{{ session?.operatorsName }}</td> 
                 <td>{{ session?.startDate }}</td>
                 <td>{{ session?.endDate }}</td>
+                <td>{{session?.startHour}}</td>
+                <td>{{session?.place}}</td>
                 <td style="text-align: center">
                   <span *ngIf="session.status === 'PLANNED'" class="badge status-new">Planifiée</span>
                   <span *ngIf="session.status === 'IN_PROGRESS'" class="badge status-progress">En cours</span>

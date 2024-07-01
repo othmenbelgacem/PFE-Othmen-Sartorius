@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,13 +27,17 @@ public class TrainingSessionResponse {
     private TrainerDto trainer;
     private TrainingTypeDto training;
     private TrainingSubTypeDto subTraining;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "Africa/Tunis")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate startDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "Africa/Tunis")
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate endDate;
     private List<UserDto> operators;
     private String operatorsName;
     private TrainingSessionStatus status;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    private LocalTime startHour;
+    private String place;
 
     public static TrainingSessionResponse fromSession(TrainingSession session) {
         String operatorNames= "";
@@ -43,6 +48,7 @@ public class TrainingSessionResponse {
 
         return TrainingSessionResponse.builder().sessionId(session.getUuid())
                 .startDate(session.getStartDate()).endDate(session.getEndDate())
+                .startHour(session.getStartHour()).place(session.getPlace())
                 .trainer(TrainerDto.fromTRainer(session.getTrainer()))
                 .training(
                         TrainingTypeDto.fromTraining(session.getTrainingType()))

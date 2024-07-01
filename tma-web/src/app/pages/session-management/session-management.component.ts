@@ -136,10 +136,10 @@ export class SessionManagementComponent implements OnInit {
         formData.append('files', this.selectedFiles[i]);
       }
       this.service.uploadDocuments(this.currentSessionId, formData).subscribe(() => {
-        this.toastr.success("Documents uploaded successfully!");
+        this.toastr.success("Documents téléchargés avec succès !");
         this.modal.dismissAll();
       }, () => {
-        this.toastr.error("Failed to upload documents.");
+        this.toastr.error("Échec du téléchargement des documents.");
       });
     }
   }
@@ -148,7 +148,7 @@ export class SessionManagementComponent implements OnInit {
     this.service.getDocuments(sessionId).subscribe((data: string[]) => {
       this.documents = data;
     }, error => {
-      this.toastr.error("Failed to load documents.");
+      this.toastr.error("Échec du chargement des documents.");
     });
   }
   

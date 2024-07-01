@@ -26,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
@@ -132,7 +133,7 @@ public class TrainingSubTypeService {
         Operator operator = operatorService.findByUuid(operatorUuid);
         TrainingSubType trainingSubType =
                 trainingSubTypeRepository.findByUuid(trainingSubTypeUuid);
-        LocalDate requestDate = LocalDate.now();
+        ZonedDateTime requestDate = ZonedDateTime.now();
         TrainingSession lastTrainingSession = trainingSessionService
                 .getLastTrainingSessionsForAnOperatorForTrainingType(
                         trainingSubTypeUuid, operator);

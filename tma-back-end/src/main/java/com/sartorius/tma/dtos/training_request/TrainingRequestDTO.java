@@ -6,6 +6,7 @@ import com.sartorius.tma.persistence.entities.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Getter
@@ -16,7 +17,7 @@ public class TrainingRequestDTO {
     private UUID uuid;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "Africa/Tunis")
-    private LocalDate requestDate;
+    private ZonedDateTime requestDate;
 
     private BaseEntityDTO teamLeader;
 

@@ -1,6 +1,7 @@
 package com.sartorius.tma.business.services;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -169,7 +170,7 @@ public class TrainingTypeService {
 
 	public String assignTrainingType(UUID trainingTypeUuid, UUID operatorUuid) {
 		Operator operator = operatorService.findByUuid(operatorUuid);
-		LocalDate requestDate = LocalDate.now();
+		ZonedDateTime requestDate = ZonedDateTime.now();
 		TrainingType trainingType = trainingTypeRepository.findByUuid(trainingTypeUuid);
 
 		TrainingSession lastTrainingSession = trainingSessionService

@@ -227,20 +227,13 @@ public class TrainingSessionService {
 
 
 	public void savePresencesPerDate(UUID sessionId, List<TrainingSessionPresenceDto> body) {
-		LocalDate date = body.get(0).getDate();
-
-		// Check if session already has presences for the given date
-		Optional<TrainingSession> existingSession = trainingSessionRepository.findSessionByUuidAndDate(sessionId, date);
-		if (existingSession.isPresent()) {
-			throw new DuplicateAttendanceException("You cannot create a new attendance file for that session. You already have one.");
-		}
-
 		TrainingSession session = trainingSessionRepository.findByUuid(sessionId);
+		List<TrainingSessionPresence> oldPresences = session.getPresences().stream().filter(presence -> presence.getDate().equals(body.get(0).getDate()) ).toList();
+		session.getPresences().removeAll(oldPresences);
 		List<TrainingSessionPresence> presences = body.stream().map(presence ->
-				new TrainingSessionPresence(date, presence.isPresent(), operatorService.findByUuid(presence.getOperator().getUserUuid()))).toList();
+				new TrainingSessionPresence(body.get(0).getDate(), presence.isPresent(), operatorService.findByUuid(presence.getOperator().getUserUuid()))).toList();
 		session.getPresences().addAll(presences);
 		trainingSessionRepository.save(session);
-
 		// Identify absent operators and their team leaders
 		List<Operator> absentOperators = presences.stream()
 				.filter(presence -> !presence.isPresent())

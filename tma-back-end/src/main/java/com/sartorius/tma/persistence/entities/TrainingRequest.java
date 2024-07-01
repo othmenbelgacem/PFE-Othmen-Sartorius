@@ -1,6 +1,7 @@
 package com.sartorius.tma.persistence.entities;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 import javax.persistence.*;
 
@@ -23,7 +24,7 @@ public class TrainingRequest extends BaseEntity {
 	private static final long serialVersionUID = 1L;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Africa/Tunis")
-	private LocalDate requestDate;
+	private ZonedDateTime requestDate;
 	
 	@ManyToOne
 	private TeamLeader teamLeader;

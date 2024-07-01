@@ -53,6 +53,7 @@ public class TrainingSessionController {
     public PageDto<TrainingSessionResponse> getSessions(
             @RequestParam(name = "page", required = false) Integer page,
             @RequestParam(name = "offset", required = false) Integer offset
+
     ) {
         return this.trainingSessionService.getSessions(page, offset);
     }
