@@ -49,12 +49,7 @@ export class UserService {
 
   saveUser(userRequest: any): Observable<any> {
     return this.http.post<any>(`${this.USER_API}/add-new-user`, userRequest);
-    /* .pipe(
-        map((res) => res.data),
-        catchError((error: HttpErrorResponse) => {
-          return throwError(error);
-        })
-      );*/
+    
   }
 
   updateUser(payload: any): Observable<any> {
@@ -94,7 +89,7 @@ export class UserService {
     return this.http.get<UserDetailsModel>(`${this.USER_API}/user-profile`);
   }
   
-  isMatriculeUnique(identifier: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.USER_API}/is-matricule-unique/${identifier}`);
-  }
+  isMatriculeUnique(params: HttpParams): Observable<boolean> {
+    return this.http.get<boolean>(`${this.USER_API}/is-matricule-unique`, { params });
+}
 }

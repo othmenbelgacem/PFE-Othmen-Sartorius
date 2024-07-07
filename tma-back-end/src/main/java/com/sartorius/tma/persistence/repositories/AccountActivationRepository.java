@@ -9,6 +9,6 @@ public interface AccountActivationRepository extends JpaRepository<AccountActiva
 
   Optional<AccountActivation> findByUuid(UUID activationCodeUuid);
 
-  Optional<AccountActivation> findByActivationCode(String activationCode);
+
 
 }

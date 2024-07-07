@@ -21,8 +21,4 @@ public class TeamMapper {
         userMapper.toUserDetailsResponse(team.getManager()),0d
         );
   }
-
-  public Team toTeam(TeamRequest teamRequest){
-    return teamRepository.findByUuid(teamRequest.getTeamUuid());
-  }
 }

@@ -10,17 +10,5 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RoleService {
 
-  private final RoleRepository roleRepository;
 
-  public List<Role> getAllRoles() {
-    return this.roleRepository.findAll();
-  }
-
-  public Role saveRole(Role role) {
-    return this.roleRepository.save(role);
-  }
-
-  public void deleteRole(Long id) {
-    this.roleRepository.deleteById(id);
-  }
 }

@@ -18,14 +18,6 @@ public class TrainingSubTypeMapper {
 	private final TrainingTypeMapper trainingTypeMapper;
 	private final TrainerMapper trainerMapper;
 
-	public TrainingSubType toTrainingSubType(TrainingSubTypeDto subTypeRequest) {
-		return trainingSubTypeRepository.findByUuid(subTypeRequest.getUuid());
-	}
-
-	public TrainingSubTypeDto toTrainingSubTypeDto(TrainingSubType subType) {
-		return TrainingSubTypeDto.builder().uuid(subType.getUuid()).label(subType.getLabel())
-				.trainingType(trainingTypeMapper.toTrainingTypeDto(subType.getType())).build();
-	}
 
 	public TrainingSubTypeDetails toTrainingSubTypeDetails(TrainingSubType trainingSubType) {
 		return TrainingSubTypeDetails.builder().uuid(trainingSubType.getUuid()).label(trainingSubType.getLabel())

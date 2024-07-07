@@ -32,7 +32,7 @@ public class DBFileStorageService {
 
   private Path fileStorageLocation;
   private static final Logger logger = LoggerFactory.getLogger(DBFileStorageService.class);
-  private MediaService mediaService;
+
 
   @Value("${file.upload-dir}")
   private String uploadDir;
@@ -96,51 +96,4 @@ public class DBFileStorageService {
     }
   }
 
-  public String storePdfFile(String resourceName, byte[] pdfFile) throws Exception {
-    String fileName = resourceName + ".pdf";
-    try {
-      // Copy file to the target location (Replacing existing file with the same name)
-      Path targetLocation = this.fileStorageLocation.resolve(fileName);
-      Files.copy(new ByteArrayInputStream(pdfFile), targetLocation,
-              StandardCopyOption.REPLACE_EXISTING);
-
-      return fileName;
-    } catch (Exception ex) {
-      throw new Exception("Could not store file " + fileName + ". Please try again!", ex);
-    }
-  }
-
-  @Async
-  public void deleteFile(Media media) {
-    try {
-      Path filePath = this.fileStorageLocation.resolve(media.getMediaLabel()).normalize();
-      Files.delete(filePath);
-      //mediaService.deleteMedia(media.getId());
-    } catch (NoSuchFileException x) {
-      log.error("%s: no such" + " file", media.getMediaLabel());
-    } catch (IOException x) {
-      log.error(x.getMessage());
-    }
-  }
-
-  public Path getAbsolutePath(String fileName) {
-
-    Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-    return filePath;
-  }
-
-  public Resource loadFileAsResourceDoc(String fileName) {
-    logger.info("Loading file as resource: {}", fileName); // Debug log
-    try {
-      Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-      Resource resource = new UrlResource(filePath.toUri());
-      if (resource.exists() || resource.isReadable()) {
-        return resource;
-      } else {
-        throw new RuntimeException("File not found " + fileName);
-      }
-    } catch (MalformedURLException ex) {
-      throw new RuntimeException("File not found " + fileName, ex);
-    }
-  }
 }

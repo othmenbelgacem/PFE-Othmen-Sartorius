@@ -16,9 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Role extends BaseEntity {
 
-  /**
-   *
-   */
+
   private static final long serialVersionUID = 9083326084374535654L;
 
   private String roleLabel;

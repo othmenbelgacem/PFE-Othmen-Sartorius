@@ -13,9 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @DiscriminatorValue("team_leader")
 public class TeamLeader extends User {
-	/**
-	* 
-	*/
+
 	private static final long serialVersionUID = 1L;
 
 	public TeamLeader(User userIn) {

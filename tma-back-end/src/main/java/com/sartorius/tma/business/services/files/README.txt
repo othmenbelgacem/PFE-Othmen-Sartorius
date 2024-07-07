@@ -1,1 +1,0 @@
-TRIPEDEO APP

@@ -27,9 +27,7 @@ public class UserMapper {
 	private final UserRepository userRepository;
 	private final OperatorRepository operatorRepository;
 
-	public UserDto toUserDto(User user) {
-		return new UserDto(user.getUuid(), user.getUserFirstName(), user.getUserLastName(), user.getCreatedAt());
-	}
+
 
 	public User toUser(UserDetails userDetails) {
 		return userRepository.findByUuid(userDetails.getUserUuid()).orElse(null);

@@ -21,13 +21,6 @@ public class MediaService {
 
   private final IFileService dBFileStorageService;
 
-  public List<Media> getAllMedias() {
-    return this.mediaRepository.findAll();
-  }
-
- public Media saveMedia(Media media) {
-    return this.mediaRepository.save(media);
-  }
   public Media findByUuid(UUID mediaUuid) {
     return this.mediaRepository.findByUuid(mediaUuid);
   }

@@ -58,9 +58,9 @@ public class UserController {
     this.userService.saveUser(userRequest);
   }
 
-  @GetMapping("/is-matricule-unique/{identifier}")
-  public boolean isMatriculeUnique(@PathVariable String identifier) {
-    return userService.isMatriculeUnique(identifier);
+  @GetMapping("/is-matricule-unique")
+  public boolean isMatriculeUnique(@RequestParam String identifier, @RequestParam(required = false) String userUuid) {
+    return userService.isMatriculeUnique(identifier, userUuid);
   }
 
   @PatchMapping(value="/update-user",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

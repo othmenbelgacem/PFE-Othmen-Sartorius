@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
+import { HttpParams } from '@angular/common/http';
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { MediaContext } from "app/enumeration/media-context";
 import { RoleCode } from "app/enumeration/role-code";
@@ -92,52 +93,57 @@ getAllUser() {
 
   onSaveUser(testForm: NgForm) {
     if (testForm.invalid) {
-      // Form is invalid, do not proceed
-      return;
-  }
+        return;
+    }
     if (!this.isEmpty(this.userRequest.userEmail) &&
         !this.isEmpty(this.userRequest.userFirstName) &&
         !this.isEmpty(this.userRequest.userLastName) &&
         !this.isEmpty(this.userRequest.userRole)) {
-          
-      // Check for unique matricule
-      this.userService.isMatriculeUnique(this.userRequest.identifier).subscribe((isUnique) => {
-        if (isUnique) {
-          const formdata = new FormData();
-          formdata.append("userEmail", this.userRequest.userEmail);
-          formdata.append("userPhoneNumber", this.userRequest.userPhoneNumber);
-          formdata.append("userFirstName", this.userRequest.userFirstName);
-          formdata.append("userLastName", this.userRequest.userLastName);
-          formdata.append("role", this.userRequest.userRole);
-          formdata.append("identifier", this.userRequest.identifier);
 
-          if (this.userPhoto) {
-            formdata.append("profilePicture", this.userPhoto);
-          }
-
-          if (this.addOrUpdateMode == 0) {
-            this.userService.saveUser(formdata).subscribe((res) => {
-              this.modal.dismissAll();
-              this.getAllUser();
-              this.showSuccess("Employé ajouté avec succès");
-            });
-          } else if (this.addOrUpdateMode == 1) {
-            formdata.append("userUuid", this.userRequest.userUuid);
-            this.userService.updateUser(formdata).subscribe((res) => {
-              if (this.userRequest.userProfilePicture != null && this.urlUserPhoto === null) {
-                this.removePicture(this.userRequest.userUuid, MediaContext[MediaContext.PICTURE_PROFIL]);
-              }
-              this.getAllUser();
-              this.modal.dismissAll();
-              this.showSuccess("Employé modifié avec succès");
-            });
-          }
-        } else {
-          this.showError("Matricule déjà existant.");
+        // Check for unique matricule
+        let params = new HttpParams().set('identifier', this.userRequest.identifier);
+        if (this.addOrUpdateMode == 1) { // Update mode
+            params = params.set('userUuid', this.userRequest.userUuid);
         }
-      });
+
+        this.userService.isMatriculeUnique(params).subscribe((isUnique) => {
+            if (isUnique) {
+                const formdata = new FormData();
+                formdata.append("userEmail", this.userRequest.userEmail);
+                formdata.append("userPhoneNumber", this.userRequest.userPhoneNumber);
+                formdata.append("userFirstName", this.userRequest.userFirstName);
+                formdata.append("userLastName", this.userRequest.userLastName);
+                formdata.append("role", this.userRequest.userRole);
+                formdata.append("identifier", this.userRequest.identifier);
+
+                if (this.userPhoto) {
+                    formdata.append("profilePicture", this.userPhoto);
+                }
+
+                if (this.addOrUpdateMode == 0) {
+                    this.userService.saveUser(formdata).subscribe((res) => {
+                        this.modal.dismissAll();
+                        this.getAllUser();
+                        this.showSuccess("Employé ajouté avec succès");
+                    });
+                } else if (this.addOrUpdateMode == 1) {
+                    formdata.append("userUuid", this.userRequest.userUuid);
+                    this.userService.updateUser(formdata).subscribe((res) => {
+                        if (this.userRequest.userProfilePicture != null && this.urlUserPhoto === null) {
+                            this.removePicture(this.userRequest.userUuid, MediaContext[MediaContext.PICTURE_PROFIL]);
+                        }
+                        this.getAllUser();
+                        this.modal.dismissAll();
+                        this.showSuccess("Employé modifié avec succès");
+                    });
+                }
+            } else {
+                this.showError("Matricule déjà existant.");
+            }
+        });
     }
-  }
+}
+
 
   onEdit(user) {
     this.urlUserPhoto = null;

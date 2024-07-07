@@ -82,34 +82,6 @@ public class LocalFileService implements IFileService {
 	}
 
 	@Override
-	public String storePdfFile(String resourceName, byte[] pdfFile) throws Exception {
-		String fileName = resourceName + ".pdf";
-		try {
-			// Copy file to the target location (Replacing existing file with the same name)
-			Path targetLocation = this.fileStorageLocation.resolve(fileName);
-			Files.copy(new ByteArrayInputStream(pdfFile), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-
-			return fileName;
-		} catch (Exception ex) {
-			throw new Exception("Could not store file " + fileName + ". Please try again!", ex);
-		}
-	}
-
-	@Async
-	@Override
-	public void deleteFile(Media media) {
-		try {
-			Path filePath = this.fileStorageLocation.resolve(media.getMediaLabel()).normalize();
-			Files.delete(filePath);
-			// mediaService.deleteMedia(media.getId());
-		} catch (NoSuchFileException x) {
-			log.error("%s: no such" + " file", media.getMediaLabel());
-		} catch (IOException x) {
-			log.error(x.getMessage());
-		}
-	}
-
-	@Override
 	public Long getFileSize(String fileName) {
 		return Optional.ofNullable(fileName).map(file -> getAbsolutePath(fileName)).map(this::sizeFromFile).orElse(0L);
 	}

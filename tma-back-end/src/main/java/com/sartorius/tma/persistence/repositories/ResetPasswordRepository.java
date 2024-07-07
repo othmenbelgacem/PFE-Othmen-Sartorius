@@ -9,7 +9,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ResetPasswordRepository extends JpaRepository<ResetPassword, Long> {
 
-  Optional<ResetPassword> findByResetPasswordUuid(UUID resetPasswordUuid);
-
-  Boolean existsByResetPasswordUuid(UUID resetPasswordUuid);
 }

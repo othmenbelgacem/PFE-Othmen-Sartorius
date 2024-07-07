@@ -227,7 +227,13 @@ public class UserService {
 		}
 	}
 
-	public boolean isMatriculeUnique(String identifier) {
+	public boolean isMatriculeUnique(String identifier, String userUuid) {
+		if (userUuid != null) {
+			User existingUser = userRepository.findByUuid(UUID.fromString(userUuid)).orElse(null);
+			if (existingUser != null && existingUser.getIdentifier().equals(identifier)) {
+				return true; // The same user's matricule is considered unique
+			}
+		}
 		return userRepository.findByIdentifier(identifier) == null;
 	}
 

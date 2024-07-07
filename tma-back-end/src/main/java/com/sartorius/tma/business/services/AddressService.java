@@ -10,17 +10,4 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AddressService {
 
-  private final AddressRepository addressRepository;
-
-  public List<Address> getAllAdresses() {
-    return this.addressRepository.findAll();
-  }
-
-  public Address saveAddress(Address address) {
-    return this.addressRepository.save(address);
-  }
-
-  public void deleteAddress(Long id) {
-    this.addressRepository.deleteById(id);
-  }
 }

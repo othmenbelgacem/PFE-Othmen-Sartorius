@@ -13,12 +13,5 @@ public class MediaMapper {
 
   private final MediaRepository mediaRepository;
 
-  public Media toMedia(MediaDto media) {
-    return mediaRepository.findByUuid(media.getMediaUuid());
-  }
-
-	public MediaDto toMediaDto(Media media) {
-    return new MediaDto(media.getUuid(), media.getMediaUrl(),media.getMediaContext());
-  }
 
 }

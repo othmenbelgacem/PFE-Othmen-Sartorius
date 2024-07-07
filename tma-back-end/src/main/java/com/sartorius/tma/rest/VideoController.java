@@ -14,10 +14,7 @@ import com.sartorius.tma.business.services.VideoService;
 
 import lombok.RequiredArgsConstructor;
 
-/**
- * @author Rokaya
- * @Date 01/07/2022
- */
+
 @RestController
 @CrossOrigin
 @RequestMapping("/video")
@@ -26,11 +23,5 @@ public class VideoController {
 
   private final VideoService videoService;
 
-  @GetMapping("/stream/{mediaUuid}")
-  @CrossOrigin
-  public ResponseEntity<byte[]> streamVideo(@RequestHeader(value = "Range", required = false) String httpRangeList,
-      @PathVariable("mediaUuid") UUID mediaUuid) throws Exception {
-    return videoService.prepareContent(mediaUuid, httpRangeList);
-  }
 
 }

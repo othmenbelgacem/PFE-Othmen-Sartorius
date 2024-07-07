@@ -90,7 +90,5 @@ public class TrainingSession extends BaseEntity {
 		return documents;
 	}
 
-	public void setDocuments(List<Document> documents) {
-		this.documents = documents;
-	}
+
 }

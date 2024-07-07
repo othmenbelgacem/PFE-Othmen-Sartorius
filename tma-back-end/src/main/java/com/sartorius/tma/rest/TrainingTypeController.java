@@ -31,10 +31,7 @@ import com.sartorius.tma.utils.Constants;
 
 import lombok.RequiredArgsConstructor;
 
-/**
- * @author Rokaya
- * @Date 28/05/2022
- */
+
 @RestController
 @RequestMapping("/training-type")
 @CrossOrigin

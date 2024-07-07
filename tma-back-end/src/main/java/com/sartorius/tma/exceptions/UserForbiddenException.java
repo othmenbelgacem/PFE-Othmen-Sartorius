@@ -12,7 +12,5 @@ public class UserForbiddenException extends RuntimeException {
     super(message);
   }
 
-  public UserForbiddenException(String message, Throwable cause) {
-    super(message, cause);
-  }
+
 }

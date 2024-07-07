@@ -26,18 +26,7 @@ public class TrainerMapper {
 	private final UserUtils userUtils;
 	private final UserRepository userRepository;
 
-	public UserDto toUserDto(User user) {
-		return new UserDto(user.getUuid(), user.getUserFirstName(), user.getUserLastName(), user.getCreatedAt());
-	}
 
-	public User toUser(UserDetails userDetails) {
-		return userRepository.findByUuid(userDetails.getUserUuid()).orElse(null);
-	}
-
-	public User_Details toUserDetails(User user) {
-		return new User_Details(user.getUuid(), user.getUserFirstName(), user.getUserLastName(),
-				userUtils.getPictureProfile(user));
-	}
 
 	public TrainerDetails toUserDetailsResponse(Trainer user) {
 		return new TrainerDetails(user.getUuid(),user.getIdentifier(), user.getUserFirstName(), user.getUserLastName(), user.getUserEmail(),
@@ -47,12 +36,6 @@ public class TrainerMapper {
 		);
 	}
 
-	public UserResponse toUserResponse(User user) {
-		return new UserResponse(user.getUuid(), user.getUserFirstName(), user.getUserLastName(), user.getCreatedAt(),
-				user.getUserEmail(), userUtils.getPictureProfile(user)
-
-		);
-	}
 
 	public TrainerDto toTrainerDto(Trainer user) {
 		String fullName = user.getUserFirstName() + " " + user.getUserLastName();

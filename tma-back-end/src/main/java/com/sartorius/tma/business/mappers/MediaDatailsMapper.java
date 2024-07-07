@@ -17,8 +17,5 @@ public class MediaDatailsMapper {
        return new MediaDetails(media.getUuid(), media.getMediaUrl(),media.getMediaLabel(),media.getOriginalName());
      }else return null;
   }
-  public Media toMedia(MediaDetails media) {
-    return mediaRepository.findByUuid(media.getMediaUuid());
-  }
 
 }

@@ -24,9 +24,6 @@ public class Document extends BaseEntity {
     private TrainingSession trainingSession;
 
 
-    public TrainingSession getTrainingSession() {
-        return trainingSession;
-    }
 
     public void setTrainingSession(TrainingSession trainingSession) {
         this.trainingSession = trainingSession;

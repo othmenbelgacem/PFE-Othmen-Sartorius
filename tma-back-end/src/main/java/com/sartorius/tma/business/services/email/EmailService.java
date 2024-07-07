@@ -36,74 +36,12 @@ import javax.mail.internet.MimeMessage;
 @Slf4j
 public class EmailService {
 
-	@Value("${tma.front.base.url}")
-	private String frontBaseUrl;
-
-	@Value("${tma.front.admin.base.url}")
-	private String frontAdminBaseUrl;
-
-	@Value("${tma.backend.base.url}")
-	private String backendBaseUrl;
-
-	@Value("${spring.mail.username}")
-	private String smtpMailUsername;
 
 	@Autowired
 	private JavaMailSender mailSender;
 
-	@Value("${tma.app.base-url}")
-	private String baseUrl;
 
-	@Autowired
-	private SpringTemplateEngine thymeleafTemplateEngine;
 
-	public EmailService() {
-	}
-
-	/**
-	 * send email
-	 *
-	 * @param emailDto: email content and config
-	 */
-	@Async
-	public void sendMail(EmailDto emailDto, List<String> destinations) {
-		destinations.stream().forEach(destination -> {
-
-			emailDto.getMaps().put(FRONT_BASE_URL, frontBaseUrl);
-			emailDto.getMaps().put(BACKEND_BASE_URL, backendBaseUrl);
-			try {
-
-				Context thymeleafContext = new Context();
-				thymeleafContext.setVariables(emailDto.getMaps());
-				String htmlBody = thymeleafTemplateEngine.process(emailDto.getTemplateName(), thymeleafContext);
-
-				MimeMessage message = mailSender.createMimeMessage();
-				MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-				// helper.setTo(emailDto.getTo());
-				helper.setTo(destination);
-				helper.setFrom(smtpMailUsername);
-				helper.setSubject(emailDto.getSubject());
-				helper.setText(htmlBody, true);
-
-				// Add exist attachments to email
-				emailDto.getAttachments().entrySet().forEach(attachment -> {
-					try {
-						helper.addAttachment(attachment.getKey(), new ByteArrayResource(attachment.getValue()));
-					} catch (MessagingException e) {
-						log.error(e.getMessage());
-						e.printStackTrace();
-					}
-				});
-
-				mailSender.send(message);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				log.error("Exception when send Email: {}", e.getMessage());
-			}
-		});
-
-	}
 	public void sendEmail(String to, String subject, String body) throws MessagingException {
 		MimeMessage mimeMessage = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");

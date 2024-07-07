@@ -100,7 +100,7 @@ public class TrainerService {
 			log.info("Password reset email sent successfully to {}", user.getUserEmail());
 		} catch (Exception e) {
 			log.error("Error sending password reset email to user {}", userUuid, e);
-			// Handle the exception, such as logging the error, notifying administrators, or retrying later.
+
 		}
 	}
 	public User updateUser(TrainerRequest userRequest) throws Exception {

@@ -3,7 +3,7 @@ package com.sartorius.tma.utils;
 public class Constants {
 
 
-  public final static String CODE = "UUID";
+
 
   public final static String FRONT_BASE_URL = "frontBaseUrl";
   public final static String NOT_FOUND = "NOT_FOUND";

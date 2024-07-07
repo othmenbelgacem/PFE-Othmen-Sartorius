@@ -52,18 +52,7 @@ public class RemoteFileService implements IFileService {
 
 	}
 
-	@Override
-	public String storePdfFile(String resourceName, byte[] pdfFile) throws Exception {
-		String fileName = resourceName + ".pdf";
-		try {
-			saveFileToServer(new ByteArrayInputStream(pdfFile), fileName, "application/pdf");
 
-			return fileName;
-		} catch (Exception ex) {
-			throw new Exception("Could not store file " + fileName + ". Please try again!", ex);
-		}
-
-	}
 
 	private void saveFileToServer(InputStream file, String key, String contentType) throws IOException {
 		ObjectMetadata metadata = new ObjectMetadata();
@@ -89,19 +78,7 @@ public class RemoteFileService implements IFileService {
 			throw new Exception("File not found " + fileName, ex);
 		}
 	}
-
-	@Override
-	@Async
-	public void deleteFile(Media media) {
-		try {
-			s3Client.deleteObject(new DeleteObjectRequest(spaceBucket, media.getMediaLabel()));
-
-		} catch (AmazonServiceException serviceException) {
-			logger.error("AmazonServiceException Message:    " + serviceException.getMessage());
-		} catch (AmazonClientException clientException) {
-			logger.error("AmazonClientException Message: " + clientException.getMessage());
-		}
-	}
+	
 
 	@Override
 	public Long getFileSize(String fileName) {
