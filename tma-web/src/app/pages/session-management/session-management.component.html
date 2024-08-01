@@ -10,7 +10,19 @@
             Mes sessions de formations
           </h4>
         </div>
-        
+        <div class="row pl-lg-5 pr-lg-5">
+          <div class="col-md-4">
+            <label for="statusFilter">Filter by Status:</label>
+            <select id="statusFilter" class="form-control" [(ngModel)]="selectedStatus" (change)="onFilterChange()">
+              <option value="">All</option>
+              <option value="PLANNED">Planifiée</option>
+              <option value="IN_PROGRESS">En cours</option>
+              <option value="DONE">Terminé</option>
+              <option value="REJECTED">Rejected</option>
+            </select>
+          </div>
+        </div>
+
       </div>
       <div class="card-body">
         <div *ngIf="currentPageContent != null && currentPageContent.items.length != 0; else emptyTemplate">

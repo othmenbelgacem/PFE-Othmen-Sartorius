@@ -93,7 +93,7 @@ export class TrainerService {
       { params }
     );
   }
-  isMatriculeUnique(identifier: string): Observable<boolean> {
-    return this.http.get<boolean>(`${this.TRAINER_API}/is-matricule-unique/${identifier}`);
-  }
+  isMatriculeUnique(params: HttpParams): Observable<boolean> {
+    return this.http.get<boolean>(`${this.TRAINER_API}/is-matricule-unique`, { params });
+}
 }

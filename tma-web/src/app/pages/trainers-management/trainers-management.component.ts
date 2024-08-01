@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
+import { HttpParams } from '@angular/common/http';
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { MediaContext } from "app/enumeration/media-context";
 import { RoleCode } from "app/enumeration/role-code";
@@ -96,7 +97,6 @@ export class TrainersManagementComponent implements OnInit {
 
   onSaveUser(testForm: NgForm) {
     if (testForm.invalid) {
-      // Form is invalid, do not proceed
       return;
   }
     if (
@@ -104,8 +104,14 @@ export class TrainersManagementComponent implements OnInit {
       !this.isEmpty(this.userRequest.userFirstName) &&
       !this.isEmpty(this.userRequest.userLastName)
     ) {
-      this.trainerService.isMatriculeUnique(this.userRequest.identifier).subscribe((isUnique) => {
-        if (isUnique) {
+      let params = new HttpParams().set('identifier', this.userRequest.identifier);
+        if (this.addOrUpdateMode == 1) { // Update mode
+            params = params.set('userUuid', this.userRequest.userUuid);
+        }
+
+          this.trainerService.isMatriculeUnique(params).subscribe((isUnique) => {
+            if (isUnique) {
+
       const formdata = new FormData();
       formdata.append("identifier",this.userRequest.identifier);
       formdata.append("userEmail", this.userRequest.userEmail);

@@ -52,11 +52,12 @@ public class TrainingSessionController {
     @GetMapping
     public PageDto<TrainingSessionResponse> getSessions(
             @RequestParam(name = "page", required = false) Integer page,
-            @RequestParam(name = "offset", required = false) Integer offset
-
+            @RequestParam(name = "offset", required = false) Integer offset,
+            @RequestParam(name = "status", required = false) TrainingSessionStatus status
     ) {
-        return this.trainingSessionService.getSessions(page, offset);
+        return this.trainingSessionService.getSessions(page, offset, status);
     }
+
 
     @PutMapping("update-status/{uuid}/{sessionStatus}")
     public void updateSessionStatus(

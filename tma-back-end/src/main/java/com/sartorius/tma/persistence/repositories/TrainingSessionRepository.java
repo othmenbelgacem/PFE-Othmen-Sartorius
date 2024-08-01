@@ -2,6 +2,7 @@ package com.sartorius.tma.persistence.repositories;
 
 import com.sartorius.tma.dtos.statics.TrainingSessionStatisticByTrainerOrOperatorDto;
 import com.sartorius.tma.dtos.statics.TrainingSessionStatisticDto;
+import com.sartorius.tma.enumeration.TrainingSessionStatus;
 import com.sartorius.tma.persistence.entities.Operator;
 import com.sartorius.tma.persistence.entities.TrainingSession;
 import com.sartorius.tma.persistence.entities.TrainingType;
@@ -36,7 +37,17 @@ public interface TrainingSessionRepository
 
     TrainingSession findByUuid(UUID id);
 
+    // New methods to support status filtering
+    Page<TrainingSession> findByStatusOrderByCreatedAtDesc(TrainingSessionStatus status, Pageable pageable);
 
+    Page<TrainingSession> findByTrainingRequestsTeamLeaderUuidAndStatusOrderByCreatedAtDesc(
+            UUID teamLeaderUuid, TrainingSessionStatus status, Pageable pageable);
+
+    Page<TrainingSession> findByTrainerUuidAndStatusOrderByCreatedAtDesc(
+            UUID trainerUuid, TrainingSessionStatus status, Pageable pageable);
+
+    Page<TrainingSession> findByOperatorsUuidAndStatusOrderByCreatedAtDesc(
+            UUID operatorUuid, TrainingSessionStatus status, Pageable pageable);
     @Query("SELECT COUNT(ts) FROM TrainingSession ts")
     long countAllSessions();
     @Query("SELECT COUNT(ts) FROM TrainingSession ts WHERE ts.status = 'REJECTED'")

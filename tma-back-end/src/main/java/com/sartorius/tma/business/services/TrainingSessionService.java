@@ -158,33 +158,40 @@ public class TrainingSessionService {
 		}
 	}
 
-	public PageDto<TrainingSessionResponse> getSessions(Integer page, Integer offset) {
+	public PageDto<TrainingSessionResponse> getSessions(Integer page, Integer offset, TrainingSessionStatus status) {
 		Pageable pageable = PageRequest.of(page, offset, Sort.by("createdAt").descending());
 		User user = userService.getCurrentUser();
 		Page<TrainingSession> sessions = null;
-		if(user.getRole().getRoleCode() == RoleCode.ADMINISTRATOR) {
-			sessions=trainingSessionRepository.findAll(pageable);
-			return new PageDto<>(sessions.getContent().stream().map(TrainingSessionResponse::fromSession).toList()
-					, sessions.getTotalElements());
-		}
-		if(user.getRole().getRoleCode() == RoleCode.MANAGER) {
-			sessions=trainingSessionRepository.findByTrainingRequestsTeamLeaderUuidOrderByCreatedAtDesc(user.getUuid(), pageable);
-			return new PageDto<>(sessions.stream().map(TrainingSessionResponse::fromSession).toList(),
-					sessions.getTotalElements());
-		}
-		if(user.getRole().getRoleCode() == RoleCode.TRAINER) {
-			sessions=trainingSessionRepository.findByTrainerUuidOrderByCreatedAtDesc(user.getUuid(), pageable);
-			return new PageDto<>(sessions.stream().map(TrainingSessionResponse::fromSession).toList(),
-					sessions.getTotalElements());
-		}
-		if(user.getRole().getRoleCode() == RoleCode.OPERATOR){
-			sessions = trainingSessionRepository.findByOperatorsUuidOrderByCreatedAtDesc(user.getUuid(),pageable);
-			return new PageDto<>(sessions.stream().map(TrainingSessionResponse::fromSession).toList(),
-					sessions.getTotalElements());
+
+		if (user.getRole().getRoleCode() == RoleCode.ADMINISTRATOR) {
+			if (status != null) {
+				sessions = trainingSessionRepository.findByStatusOrderByCreatedAtDesc(status, pageable);
+			} else {
+				sessions = trainingSessionRepository.findAllByOrderByCreatedAtDesc(pageable);
+			}
+		} else if (user.getRole().getRoleCode() == RoleCode.MANAGER) {
+			if (status != null) {
+				sessions = trainingSessionRepository.findByTrainingRequestsTeamLeaderUuidAndStatusOrderByCreatedAtDesc(user.getUuid(), status, pageable);
+			} else {
+				sessions = trainingSessionRepository.findByTrainingRequestsTeamLeaderUuidOrderByCreatedAtDesc(user.getUuid(), pageable);
+			}
+		} else if (user.getRole().getRoleCode() == RoleCode.TRAINER) {
+			if (status != null) {
+				sessions = trainingSessionRepository.findByTrainerUuidAndStatusOrderByCreatedAtDesc(user.getUuid(), status, pageable);
+			} else {
+				sessions = trainingSessionRepository.findByTrainerUuidOrderByCreatedAtDesc(user.getUuid(), pageable);
+			}
+		} else if (user.getRole().getRoleCode() == RoleCode.OPERATOR) {
+			if (status != null) {
+				sessions = trainingSessionRepository.findByOperatorsUuidAndStatusOrderByCreatedAtDesc(user.getUuid(), status, pageable);
+			} else {
+				sessions = trainingSessionRepository.findByOperatorsUuidOrderByCreatedAtDesc(user.getUuid(), pageable);
+			}
 		}
 
-		return null;
+		return new PageDto<>(sessions.getContent().stream().map(TrainingSessionResponse::fromSession).toList(), sessions.getTotalElements());
 	}
+
 
 	public void updateStatus(UUID sessionId, TrainingSessionStatus status) {
 		TrainingSession session = trainingSessionRepository.findByUuid(sessionId);

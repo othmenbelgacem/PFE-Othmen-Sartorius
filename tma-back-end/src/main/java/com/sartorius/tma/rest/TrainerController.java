@@ -59,9 +59,9 @@ public class TrainerController {
 	  if(userRequest.getUserPhoneNumber().equals("undefined") || userRequest.getUserPhoneNumber().isEmpty()) userRequest.setUserPhoneNumber(null);
        this.trainerService.saveUser(userRequest);
   }
-  @GetMapping("/is-matricule-unique/{identifier}")
-  public boolean isMatriculeUnique(@PathVariable String identifier) {
-    return trainerService.isMatriculeUnique(identifier);
+  @GetMapping("/is-matricule-unique")
+  public boolean isMatriculeUnique(@RequestParam String identifier, @RequestParam(required = false) String userUuid) {
+    return userService.isMatriculeUnique(identifier, userUuid);
   }
   @PatchMapping(value="/update-user",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public void updateUser(@ModelAttribute TrainerRequest userRequest) throws Exception {

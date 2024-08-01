@@ -23,7 +23,7 @@ export class SessionManagementComponent implements OnInit {
   documents: string[] = [];
   currentSessionId: string;
   selectedFiles: FileList;
-
+  selectedStatus: string = '';
   @ViewChild("memberModal", { static: true }) memberModal: TemplateRef<any>;
   @ViewChild("uploadModal", { static: true }) uploadModal: TemplateRef<any>;
   @ViewChild("downloadModal", { static: true }) downloadModal: TemplateRef<any>;
@@ -39,18 +39,25 @@ export class SessionManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPage();
-  }
+}
 
-  onPageChange(event) {
+onPageChange(event: any): void {
     this.page = event;
     this.loadPage();
-  }
+}
 
-  loadPage() {
-    this.service.getSessions(this.currentPageNumber, this.PAGE_SIZE).subscribe((data: any) => {
-      this.currentPageContent = data;
-    });
-  }
+onFilterChange(): void {
+    this.loadPage();
+}
+
+loadPage(): void {
+  this.service.getSessions(this.page - 1, this.pageSize, this.selectedStatus).subscribe((data: any) => {
+    this.currentPageContent = data;
+    this.collectionSize = data.count;
+    console.log('Sessions data:', this.currentPageContent);
+  });
+}
+
 
   isTrainer(): boolean {
     return UtilsService.isTrainer();

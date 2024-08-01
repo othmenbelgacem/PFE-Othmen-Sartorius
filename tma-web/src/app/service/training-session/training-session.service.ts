@@ -16,19 +16,24 @@ export class TrainingSessionService {
     return this.http.post<any>(`${this.TRAINING_SESSION_API}`, request);
   }
 
-  getSessions(page: number, offset: number): Observable<any> {
+  getSessions(page: number, offset: number, status: string = ''): Observable<any> {
     let params = new HttpParams();
 
     if (page !== undefined && page !== null) {
-      params = params.set("page", page.toString());
+        params = params.set("page", page.toString());
     }
 
     if (offset !== undefined && offset !== null) {
-      params = params.set("offset", offset.toString());
+        params = params.set("offset", offset.toString());
+    }
+
+    if (status) {
+        params = params.set("status", status);
     }
 
     return this.http.get<any>(`${this.TRAINING_SESSION_API}`, { params });
-  }
+}
+
   
 
   getSessionPresences(sessionId: string): Observable<any> {
