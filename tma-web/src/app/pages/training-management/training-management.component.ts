@@ -50,6 +50,8 @@ export class TrainingManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllTrainingTypes();
+    
+   
   }
 
   onAdd() {
@@ -120,6 +122,7 @@ export class TrainingManagementComponent implements OnInit {
   }
 
   getAllTrainingTypes() {
+    this.retrieveAllTrainers();
     this.trainingTypeService
       .getAllTrainingTypes(this.page - 1, this.pageSize, this.searchText)
       .subscribe((res: any) => {
@@ -189,13 +192,15 @@ export class TrainingManagementComponent implements OnInit {
     });
   }
 
-  retrieveAllTrainers() {
+  retrieveAllTrainers(): void {
     this.trainerService
       .retrieveAllTrainers()
       .subscribe((trainers: TrainerDto[]) => {
         this.trainerList = trainers;
+        console.log('Trainers fetched:', this.trainerList); // Log inside the subscribe block
       });
   }
+  
 
   loadTrainersByTrainingType() {
     this.trainerService

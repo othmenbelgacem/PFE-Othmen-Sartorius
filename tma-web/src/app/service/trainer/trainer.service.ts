@@ -67,7 +67,9 @@ export class TrainerService {
   }
 
   retrieveAllTrainers(): Observable<TrainerDto[]> {
-    return this.http.get<TrainerDto[]>(`${this.TRAINER_API}/all`);
+    return this.http.get<TrainerDto[]>(`${this.TRAINER_API}/all`).pipe(
+      tap(trainers => console.log('Trainers fetched: ', trainers))
+    );
   }
 
   getTrainersByTrainingTypeUuid(

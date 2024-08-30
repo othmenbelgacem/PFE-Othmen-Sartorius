@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import com.sartorius.tma.business.services.email.EmailService;
 import com.sartorius.tma.persistence.repositories.*;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,6 +52,7 @@ public class TrainerService {
 	private final UserService UserService;
 	private final EmailService emailService;
 	private  final UserRepository userRepository;
+
 	public List<TrainerDetails> getAllTrainers() {
 		return this.trainerRepository.findAll().stream().map(trainerMapper::toUserDetailsResponse).collect(Collectors.toList());
 	}
@@ -174,13 +177,17 @@ public class TrainerService {
 		return new PageDto<TrainerDetails>(users.getContent().stream().map(trainerMapper::toUserDetailsResponse).toList(),users.getTotalElements());
 	}
 
-    public List<TrainerDto> retrieveAllTrainers() {
-        List<Trainer> allTrainers = trainerRepository.findAll();
+	public List<TrainerDto> retrieveAllTrainers() {
+		List<Trainer> allTrainers = trainerRepository.findAll();
 
-        return allTrainers.stream()
-            .map(trainerMapper::toTrainerDto)
-            .collect(Collectors.toList());
-    }
+
+		List<TrainerDto> trainerDtos = allTrainers.stream()
+				.map(trainerMapper::toTrainerDto)
+				.collect(Collectors.toList());
+
+
+		return trainerDtos;
+	}
     
     public List<TrainerDto> getTrainersByTrainingTypeUuid(UUID trainingTypeUuid) {
         TrainingType trainingType = trainingTypeRepository.findByUuid(trainingTypeUuid);

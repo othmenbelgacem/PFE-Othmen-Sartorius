@@ -6,6 +6,8 @@ import java.util.UUID;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class TrainerController {
   private final TrainerService trainerService;
   private final UserService userService;
-
+  private static final Logger logger = LoggerFactory.getLogger(TrainerController.class);
 
   @GetMapping(value = "/list")
   public List<TrainerDetails> getAllUsers() {
@@ -89,7 +91,10 @@ public class TrainerController {
 
   @GetMapping("/all")
   public List<TrainerDto> getAllTrainers() {
-      return trainerService.retrieveAllTrainers();
+    logger.info("Received request to get all trainers");
+    List<TrainerDto> trainers = trainerService.retrieveAllTrainers();
+    logger.info("Returning {} trainers", trainers.size());
+    return trainers;
   }
   
   @GetMapping("/by-training-type")
