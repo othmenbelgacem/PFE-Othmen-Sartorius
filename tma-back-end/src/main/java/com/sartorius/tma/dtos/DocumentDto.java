@@ -11,7 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DocumentDto {
-    private Long id;  // Changed to Long to match BaseEntity
+    private Long id;
     private String mediaLabel;
     private Long mediaSize;
     private String mediaUrl;

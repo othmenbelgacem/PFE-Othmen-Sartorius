@@ -116,6 +116,7 @@ public class TrainerService {
 			user.setUserFirstName(userRequest.getUserFirstName());
 			user.setUserLastName(userRequest.getUserLastName());
 			user.setUserPhoneNumber(userRequest.getUserPhoneNumber());
+			user.setAbout(userRequest.getAbout());
 
 			if (userRequest.getProfilePicture() != null) {
 				user = this.deleteOldUserPicture(user.getUuid());

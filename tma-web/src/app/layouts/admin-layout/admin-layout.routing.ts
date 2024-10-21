@@ -3,7 +3,6 @@ import { UsersManagementComponent } from "./../../pages/users-management/users-m
 import { Routes } from "@angular/router";
 
 import { DashboardComponent } from "../../pages/dashboard/dashboard.component";
-import { UserComponent } from "../../pages/user/user.component";
 import { TeamsManagmentComponent } from "app/pages/teams-managment/teams-managment.component";
 import { AddMembersComponent } from "app/pages/teams-managment/add-members/add-members.component";
 import { NewPasswordComponent } from "app/pages/auth/new-password/new-password.component";
@@ -20,7 +19,6 @@ import { PresenceSheetComponent } from "app/pages/trainer/presence-sheet/presenc
 
 export const AdminLayoutRoutes: Routes = [
   { path: "dashboard", component: DashboardComponent },
-  { path: "user", component: UserComponent },
   { path: "users-management", component: UsersManagementComponent },
   { path: "trainers-management", component: TrainersManagementComponent },
   { path: "teams-management", component: TeamsManagmentComponent },

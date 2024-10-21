@@ -4,12 +4,11 @@ import com.sartorius.tma.business.services.TrainingSessionStatisticService;
 import com.sartorius.tma.dtos.statics.TrainingSessionStatisticDto;
 import com.sartorius.tma.dtos.statics.TrainingRequestCountDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin
@@ -28,4 +27,11 @@ public class TrainingSessionStatisticController {
     public List<TrainingRequestCountDTO> getTop10TrainingRequests() {
         return this.trainingSessionStatisticService.getTop10TrainingRequests();
     }
+    @GetMapping("/sessions-by-month")
+    public ResponseEntity<Map<String, Integer>> getSessionStatsByMonth(
+            @RequestParam("year") int year,
+            @RequestParam("month") int month) {
+        return ResponseEntity.ok(trainingSessionStatisticService.getSessionStatsByMonth(year, month));
+    }
+
 }

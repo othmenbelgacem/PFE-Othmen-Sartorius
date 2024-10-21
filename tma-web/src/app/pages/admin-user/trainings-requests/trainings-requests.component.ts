@@ -11,7 +11,7 @@ import { TrainingSessionService } from "app/service/training-session/training-se
 import { TrainingTypeService } from "app/service/training-type/training-type.service";
 import { TrainingRequestService } from "app/service/trainings-requests/trainings-requests.service";
 import { ToastrService } from "ngx-toastr";
-
+import {ManagerTrainingService} from "app/service/manager/manager-training.service";
 @Component({
   selector: "trainings-requests",
   templateUrl: "./trainings-requests.component.html",
@@ -47,7 +47,8 @@ export class TrainingsRequestsComponent implements OnInit {
     private trainerService: TrainerService,
     private trainingSessionService: TrainingSessionService,
     private modal: NgbModal,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private trainingService: ManagerTrainingService
   ) {}
 
   ngOnInit() {
@@ -205,5 +206,23 @@ export class TrainingsRequestsComponent implements OnInit {
   }
   showSuccess(msg) {
     this.toastr.success(msg);
+  }
+  onCancelOperator(trainingTypeUuid: string, operatorUuid: string) {
+    console.log('Cancelling operator training with trainingTypeUuid:', trainingTypeUuid, 'and operatorUuid:', operatorUuid);
+
+    if (!trainingTypeUuid || !operatorUuid) {
+      this.toastr.error('Invalid training or operator ID');
+      return;
+    }
+
+    this.trainingService.cancelOperatorTraining({ trainingId: trainingTypeUuid, operatorId: operatorUuid }).subscribe(
+      (res) => {
+        this.toastr.success('Formation annulée avec succès');
+        this.loadPage(this.getDefaultPageRequest()); 
+      },
+      (error) => {
+        this.toastr.error('Erreur lors de l\'annulation de la formation');
+      }
+    );
   }
 }

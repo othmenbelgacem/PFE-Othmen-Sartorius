@@ -31,13 +31,11 @@
               <th class="label" style="width: 15%">Formation</th>
               <th style="width: 15%">Sous-Formation</th>
               <th *ngIf="!isTrainer()" style="width: 10%">Formateur</th>
-              <th *ngIf="!isCollaborator()" style="width: 10%">Operateurs</th> 
+              <th *ngIf="!isCollaborator() || !isManager" style="width: 10%">Operateurs</th>
               <th style="width: 15%">Date début</th>
               <th style="width: 15%">Date fin</th>
               <th style="width: 8%">Heure de début</th>
               <th style="width: 8%">Place</th>
-
-              <th *ngIf="showOperator" style="width: 10%">Opérateurs</th>
               <th style="width: 8%">Statut</th>
               <th *ngIf="isTrainer()" style="width: 10%">Actions</th> 
               <th *ngIf="isTrainer()" style="width: 6%" >upload support doc</th>
@@ -56,8 +54,8 @@
                 <td>{{ session?.subTraining?.label || "-" }}</td>
                 <td *ngIf="!isTrainer()">{{ session?.trainer.userFullName }}</td>
                 <td *ngIf="!isCollaborator()"><i class="fa fa-users primary-icon action-icon" (click)="openMemberModal(session)"></i></td> 
-                <td *ngIf="showOperator">{{ session?.operatorsName }}</td> 
                 <td>{{ session?.startDate }}</td>
+                
                 <td>{{ session?.endDate }}</td>
                 <td>{{session?.startHour}}</td>
                 <td>{{session?.place}}</td>
@@ -71,12 +69,12 @@
                 <td *ngIf="isTrainer()" class="text-right">
                   <i *ngIf="session.status === 'PLANNED'" class="fa fa-caret-square-o-right mr-3 primary-icon action-icon" (click)="startSession(session)"></i>
                   <i *ngIf="session.status === 'IN_PROGRESS'" class="fa fa-check-square mr-3 primary-icon action-icon" (click)="closeSession(session)"></i>
-                  <i *ngIf="session.status !== 'PLANNED'" class="fa fa-calendar mr-3 primary-icon action-icon" (click)="goToresencesheets(session)"></i>
+                  <i *ngIf="session.status !== 'PLANNED' && session.status !== 'REJECTED'" class="fa fa-calendar mr-3 primary-icon action-icon" (click)="goToresencesheets(session)"></i>
                 </td>
-                <td *ngIf="isTrainer()"> 
+                <td *ngIf="isTrainer() && session.status !== 'REJECTED'"> 
                   <i class="fa fa-plus action-icon" style="font-size:25px" aria-hidden="true" (click)="openUploadModal(session)"></i>
                 </td>
-                <td *ngIf="isCollaborator()">
+                <td *ngIf="isCollaborator() && session.status !== 'REJECTED'">
                   <i class="fa fa-download action-icon " style="font-size:30px" (click)="openDownloadModal(session)"></i>
                 </td>
                 <td *ngIf="isAdministrator() || isTrainer()" > 

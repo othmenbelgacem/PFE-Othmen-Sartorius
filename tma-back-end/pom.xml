@@ -28,9 +28,9 @@
 		<org.apache.commons-lang3.version>3.11</org.apache.commons-lang3.version>
 		<com.itextpdf.html2pdf>3.0.3</com.itextpdf.html2pdf>
 		<org.apache.poi.poi-ooxml>4.0.0</org.apache.poi.poi-ooxml>
-		<com.amazonaws.aws-java-sdk-s3.version>1.12.9</com.amazonaws.aws-java-sdk-s3.version>
+
 		<spring-cloud.version>2020.0.3</spring-cloud.version>
-		<com.amazonaws.aws-java-sdk.version>1.11.163</com.amazonaws.aws-java-sdk.version>
+
 		
 	</properties>
 
@@ -150,12 +150,7 @@
 			<version>${org.apache.commons-lang3.version}</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
 
-		<!-- Itext7 html2pdf -->
-		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>html2pdf</artifactId>
-			<version>${com.itextpdf.html2pdf}</version>
-		</dependency>
+
 
 		<!-- ical4j -->
 		<dependency>
@@ -196,17 +191,6 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>4.0.0</version>
-		</dependency>
-		<!-- aws-java-sdk-s3 -->
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk</artifactId>
-			<version>${com.amazonaws.aws-java-sdk.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-s3</artifactId>
-			<version>${com.amazonaws.aws-java-sdk-s3.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -256,30 +240,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 		</profile>
-		<profile>
-			<id>dev</id>
-			<properties>
-				<activatedProperties>dev</activatedProperties>
-			</properties>
-		</profile>
-		<profile>
-			<id>preprod1</id>
-			<properties>
-				<activatedProperties>preprod1</activatedProperties>
-			</properties>
-		</profile>
-		<profile>
-			<id>preprod2</id>
-			<properties>
-				<activatedProperties>preprod2</activatedProperties>
-			</properties>
-		</profile>
-		<profile>
-			<id>prod</id>
-			<properties>
-				<activatedProperties>prod</activatedProperties>
-			</properties>
-		</profile>
+
 	</profiles>
 
 

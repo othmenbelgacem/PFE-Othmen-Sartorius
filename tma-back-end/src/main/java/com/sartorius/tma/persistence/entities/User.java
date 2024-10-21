@@ -50,8 +50,7 @@ public class User extends BaseEntity {
   @ManyToOne(cascade = CascadeType.MERGE)
   private Team team;
   
-  @OneToOne(cascade = CascadeType.ALL)
-  private Address address;
+
 
 
   @PrePersist

@@ -18,6 +18,7 @@ import com.sartorius.tma.persistence.entities.TrainingType;
 import com.sartorius.tma.persistence.repositories.TrainerRepository;
 import com.sartorius.tma.persistence.repositories.TrainingRequestRepository;
 import com.sartorius.tma.persistence.repositories.TrainingSubTypeRepository;
+import com.sartorius.tma.persistence.repositories.TrainingTypeRepository;
 import com.sartorius.tma.utils.Constants;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -40,6 +42,7 @@ import java.util.stream.Collectors;
 public class TrainingSubTypeService {
 
 	private final TrainingSubTypeRepository trainingSubTypeRepository;
+    private final TrainingTypeRepository trainingTypeRepository;
 	private final TrainerRepository trainerRepository;
 	private final TrainingSubTypeMapper trainingSubTypeMapper;
 	private final TrainingTypeMapper trainingTypeMapper;
@@ -119,14 +122,36 @@ public class TrainingSubTypeService {
                 .map(trainingSubTypeMapper::toTrainingSubTypeDetails)
                 .collect(Collectors.toList());
     }
-    
+
+    @Transactional
     public void deleteTrainingSubType(UUID trainingSubTypeUuid) {
         TrainingSubType trainingSubType = trainingSubTypeRepository.findByUuid(trainingSubTypeUuid);
 
         if (trainingSubType != null) {
-            trainingSubTypeRepository.deleteById(trainingSubType.getId());
+            // Step 1: Remove the relationship with trainers
+            List<Trainer> trainers = trainingSubType.getTrainers();
+            if (trainers != null && !trainers.isEmpty()) {
+                for (Trainer trainer : trainers) {
+                    trainer.getTrainingSubTypes().remove(trainingSubType);
+                    trainerRepository.save(trainer); // Save the trainer to update the relationship in the DB
+                }
+            }
+
+            // Step 2: Remove the association from TrainingType
+            TrainingType trainingType = trainingSubType.getType();
+            if (trainingType != null) {
+                trainingType.getTrainingSubTypes().remove(trainingSubType);
+                trainingTypeRepository.save(trainingType); // Save the training type to update the relationship
+            }
+
+            // Step 3: Now delete the TrainingSubType
+            trainingSubTypeRepository.delete(trainingSubType);
+            System.out.println("Deleted subtraining: " + trainingSubTypeUuid);
+        } else {
+            System.out.println("Subtraining not found: " + trainingSubTypeUuid);
         }
     }
+
 
     public String assignSubTrainingType(UUID trainingSubTypeUuid,
                                         UUID operatorUuid) {

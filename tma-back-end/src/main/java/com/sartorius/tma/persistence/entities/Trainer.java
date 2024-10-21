@@ -2,12 +2,7 @@ package com.sartorius.tma.persistence.entities;
 
 import java.util.List;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,12 +31,12 @@ public class Trainer extends User {
             inverseJoinColumns = @JoinColumn(name = "training_type_id")
         )
 	private List<TrainingType> trainingTypes;
-	
-	@ManyToMany
+
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(
-	    name = "tma_training_sub_stype_trainers",
-	    joinColumns = @JoinColumn(name = "trainers_id"),
-	    inverseJoinColumns = @JoinColumn(name = "training_sub_type_id")
+			name = "tma_training_sub_stype_trainers",
+			joinColumns = @JoinColumn(name = "trainers_id"),
+			inverseJoinColumns = @JoinColumn(name = "training_sub_type_id")
 	)
 	private List<TrainingSubType> trainingSubTypes;
 	

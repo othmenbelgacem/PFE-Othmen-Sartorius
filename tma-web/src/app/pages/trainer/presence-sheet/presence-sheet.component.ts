@@ -12,7 +12,8 @@ export class PresenceSheetComponent implements OnInit {
   presences: any[] = [];
   sessionId: string;
   date: string;
-
+  doneSessions: any[] = [];
+  isDone: boolean = false;
   constructor(
     private service: TrainingSessionService,
     private activatedRoute: ActivatedRoute,
@@ -25,6 +26,16 @@ export class PresenceSheetComponent implements OnInit {
     this.date = this.activatedRoute.snapshot.paramMap.get("date");
 
     this.getPresences();
+    this.service.getDoneSessions().subscribe((sessions) => {
+      this.doneSessions = sessions;
+
+      this.isDone = this.doneSessions.some(session => {
+      
+        return session.uuid === this.sessionId; 
+      });
+
+      console.log('Is session DONE?', this.isDone);
+    });
   }
 
   getPresences() {

@@ -74,5 +74,8 @@ export class TrainingSessionService {
         responseType: 'blob'
     });
 }
+getDoneSessions(): Observable<any> {
+  return this.http.get(`${this.TRAINING_SESSION_API}/all-done-sessions`);
+}
 
 }

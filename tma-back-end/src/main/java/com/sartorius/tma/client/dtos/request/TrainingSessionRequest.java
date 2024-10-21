@@ -24,5 +24,6 @@ public class TrainingSessionRequest {
     private List<UUID> operatorUuids;
     private String place;
     private LocalTime startHour;
+    private LocalTime endHour;
 
 }

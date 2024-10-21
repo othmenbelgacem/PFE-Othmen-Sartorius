@@ -4,13 +4,11 @@ import com.sartorius.tma.business.services.TrainingSessionService;
 import com.sartorius.tma.business.services.files.DBFileStorageService;
 import com.sartorius.tma.client.dtos.request.TrainingSessionRequest;
 import com.sartorius.tma.client.dtos.response.TrainingSessionResponse;
-import com.sartorius.tma.dtos.DocumentDto;
-import com.sartorius.tma.dtos.PageDto;
-import com.sartorius.tma.dtos.TrainingSessionPresenceDto;
-import com.sartorius.tma.dtos.TrainingSessionPresencePerDateDto;
+import com.sartorius.tma.dtos.*;
 import com.sartorius.tma.enumeration.TrainingSessionStatus;
 import com.sartorius.tma.exceptions.DuplicateAttendanceException;
 import com.sartorius.tma.persistence.entities.Document;
+import com.sartorius.tma.persistence.entities.TrainingSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +45,11 @@ public class TrainingSessionController {
     public void saveSession(
             @RequestBody TrainingSessionRequest request) {
         this.trainingSessionService.saveSession(request);
+    }
+    @GetMapping("/all-done-sessions")
+    public List<TrainingSessionDto> getDoneSessions() {
+        List<TrainingSessionDto> doneSessions = trainingSessionService.getAllDoneSessions();
+        return doneSessions;
     }
 
     @GetMapping

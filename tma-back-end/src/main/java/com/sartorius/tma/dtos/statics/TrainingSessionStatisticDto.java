@@ -22,10 +22,12 @@ public class TrainingSessionStatisticDto {
             sessionStaticByTrainerOrOperator;
 
     public TrainingSessionStatisticDto(long totalSession,
+                                       long totalPlannedSession,
                                        long totalInProgressSession,
                                        long totalDoneSession) {
 
         this.totalSession = totalSession;
+        this.totalPlannedSession = totalPlannedSession;
         this.totalInProgressSession = totalInProgressSession;
         this.totalDoneSession = totalDoneSession;
     }

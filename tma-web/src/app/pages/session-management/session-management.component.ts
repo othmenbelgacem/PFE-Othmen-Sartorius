@@ -18,7 +18,7 @@ export class SessionManagementComponent implements OnInit {
   public currentPageNumber: number = 0;
   public readonly PAGE_SIZE: number = 100000;
   page: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 100;
   collectionSize: number = 0;
   documents: string[] = [];
   currentSessionId: string;
@@ -52,9 +52,23 @@ onFilterChange(): void {
 
 loadPage(): void {
   this.service.getSessions(this.page - 1, this.pageSize, this.selectedStatus).subscribe((data: any) => {
-    this.currentPageContent = data;
-    this.collectionSize = data.count;
-    console.log('Sessions data:', this.currentPageContent);
+    // Remove duplicate sessions based on UUID
+    const uniqueSessions = this.removeDuplicateSessions(data.items);
+    this.currentPageContent = { ...data, items: uniqueSessions };
+    this.collectionSize = uniqueSessions.length;
+    console.log('Sessions data (deduplicated):', this.currentPageContent);
+  });
+}
+// Utility function to remove duplicates based on UUID
+removeDuplicateSessions(sessions: any[]): any[] {
+  const seenUuids = new Set();
+  return sessions.filter(session => {
+    if (seenUuids.has(session.sessionId)) {
+      return false;
+    } else {
+      seenUuids.add(session.sessionId);
+      return true;
+    }
   });
 }
 

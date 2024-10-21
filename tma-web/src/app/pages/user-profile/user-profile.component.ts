@@ -5,7 +5,7 @@ import { FileService } from "app/service/file/file.service";
 import { UserService } from "app/service/user/user.service";
 import { UtilsService } from "app/service/utils.service";
 import { ToastrService } from "ngx-toastr";
-
+import { Router } from '@angular/router'; 
 @Component({
   selector: "user-profile",
   templateUrl: "./user-profile.component.html",
@@ -19,7 +19,8 @@ export class UserProfileComponent implements OnInit {
   constructor(
     private userService: UserService,
     private toastr: ToastrService,
-    private fileService: FileService
+    private fileService: FileService,
+    private router: Router 
   ) {}
 
   ngOnInit(): void {
@@ -39,6 +40,9 @@ export class UserProfileComponent implements OnInit {
           this.userRequest.userProfilePicture.mediaUrl;
       }
     });
+  }
+  onCancel() {
+    this.router.navigate(['/']); 
   }
   onSelectFile(event: any) {
     if (event.target.files && event.target.files[0]) {
@@ -90,6 +94,7 @@ export class UserProfileComponent implements OnInit {
       });
     }
   }
+  
   showSuccess(msg) {
     this.toastr.success(msg);
   }

@@ -60,6 +60,7 @@
               <th style="width: 15%">Opérateur</th>
               <th style="width: 10%">Date</th>
               <th style="width: 6%">Statut</th>
+              <th style="width: 10%">Annuler</th>
             </thead>
             <tbody>
               <tr
@@ -99,6 +100,14 @@
                     class="badge status-active"
                     >Session terminé</span
                   >
+                </td>
+                <td>
+                  <div *ngIf="request.status !== 'SESSION_FINISHED'">
+                    <button class="btn btn-danger btn-round btn-sm "
+                            (click)="onCancelOperator(request.trainingType.uuid, request.operator.uuid)">
+                      Annuler demande
+                    </button>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -236,6 +245,10 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
+                    <label>Heure de fin</label>
+              <div class="cs-form">
+                <input type="time" class="form-control" value="10:05 AM" [(ngModel)]="trainingSessionRequest.endHour"/>
+              </div>
                     <label>Date fin</label>
                     <input
                       required

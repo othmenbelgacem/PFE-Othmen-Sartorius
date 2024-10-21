@@ -6,19 +6,11 @@
   z-index: 1040 !important;
 }
 
-:host ::ng-deep ng-select ng-dropdown-panel {
-  z-index: 9999999;
-}
-
 :host ::ng-deep ng-select .ng-dropdown-panel {
+  z-index: 9999999;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.08) !important;
   border-radius: 8px !important;
 }
-
-// select {
-//   padding: 9px;
-//   border: 1px solid #dddddd;
-// }
 
 input {
   font-size: 14px;
@@ -37,8 +29,9 @@ input {
   text-align: center;
 }
 
-.primary-icon {
+.primary-icon, .icon {
   color: black;
+  font-size: 15px;
 }
 
 .danger-icon {
@@ -69,21 +62,12 @@ $circleSize: 30px;
   width: 30%;
 }
 
-::ng-deep .p-multiselect.p-multiselect-chip .p-multiselect-token {
+::ng-deep .p-multiselect.p-multiselect-chip .p-multiselect-token,
+::ng-deep .p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
   background: #6c757d24 !important;
 }
-::ng-deep
-  .p-multiselect-panel
-  .p-multiselect-items
-  .p-multiselect-item.p-highlight {
-  background: #6c757d24 !important;
-}
-::ng-deep
-  .p-checkbox:not(.p-checkbox-disabled)
-  .p-checkbox-box.p-highlight:hover {
-  border-color: black !important;
-  background: yellow !important;
-}
+
+::ng-deep .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover,
 ::ng-deep .p-checkbox .p-checkbox-box.p-highlight {
   border-color: black !important;
   background: yellow !important;
@@ -118,11 +102,6 @@ select option:hover {
   background-color: #f0f0f0 !important;
 }
 
-.icon {
-  color: black;
-  font-size: 15px;
-}
-
 .badge {
   border-radius: 2px;
   padding: 0.25em 0.5em;
@@ -130,30 +109,37 @@ select option:hover {
   font-weight: 700;
   font-size: 11px;
   letter-spacing: 0.3px;
+
   &.status-active {
     background-color: #c8e6c9;
     color: #256029;
   }
+
   &.status-label {
     background-color: #c5d1e4;
     color: #2289a0;
   }
+
   &.status-blocked {
     background-color: #ffcdd2;
     color: #c63737;
   }
+
   &.status-negotiation {
     background-color: #bf9f2c;
     color: #8a5340;
   }
+
   &.status-new {
     background-color: #80808082;
     color: white;
   }
+
   &.status-renewal {
     background-color: #eccfff;
     color: #694382;
   }
+
   &.status-progress {
     background-color: #ffd8b2;
     color: #805b36;

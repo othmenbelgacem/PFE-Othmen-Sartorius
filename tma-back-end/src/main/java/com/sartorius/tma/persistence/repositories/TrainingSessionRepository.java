@@ -1,5 +1,6 @@
 package com.sartorius.tma.persistence.repositories;
 
+import com.sartorius.tma.dtos.TrainingSessionDto;
 import com.sartorius.tma.dtos.statics.TrainingSessionStatisticByTrainerOrOperatorDto;
 import com.sartorius.tma.dtos.statics.TrainingSessionStatisticDto;
 import com.sartorius.tma.enumeration.TrainingSessionStatus;
@@ -14,6 +15,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,7 +25,8 @@ public interface TrainingSessionRepository
         extends JpaRepository<TrainingSession, Long> {
     List<TrainingSession> findByTrainingTypeUuidAndOperatorsInOrderByCreatedAtDesc(
             UUID trainingTypeUuid, List<Operator> operators);
-
+    @Query("SELECT ts FROM TrainingSession ts WHERE ts.status = 'DONE'")
+    List<TrainingSession> findAllDone();
 
     Page<TrainingSession> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
@@ -70,7 +73,7 @@ public interface TrainingSessionRepository
     List<TrainingSessionStatisticByTrainerOrOperatorDto> findTrainerSessionStatisticsByTrainer();
 
     @Query("SELECT new com.sartorius.tma.dtos.statics.TrainingSessionStatisticDto(" +
-            "COUNT(ts), " +
+            "COUNT(ts), " +"SUM(CASE WHEN ts.status = 'PLANNED' THEN 1 ELSE 0 END),"+
             "SUM(CASE WHEN ts.status = 'IN_PROGRESS' THEN 1 ELSE 0 END), " +
             "SUM(CASE WHEN ts.status = 'DONE' THEN 1 ELSE 0 END)) " +
             "FROM TrainingSession ts WHERE ts.trainer.uuid = :trainerId")
@@ -100,6 +103,18 @@ public interface TrainingSessionRepository
     long countRejectedSessionsByOperator(@Param("operatorId") UUID operatorId);
     @Query("SELECT ts FROM TrainingSession ts LEFT JOIN FETCH ts.documents WHERE ts.uuid = :uuid")
     TrainingSession findByUuidWithDocuments(@Param("uuid") UUID uuid);
+    @Query("SELECT COUNT(ts) FROM TrainingSession ts WHERE ts.status = 'DONE' AND YEAR(ts.endDate) = :year AND MONTH(ts.endDate) = :month")
+    int countDoneSessionsByMonth(@Param("year") int year, @Param("month") int month);
+    @Query("SELECT COUNT(ts) FROM TrainingSession ts WHERE ts.status = 'IN_PROGRESS'")
+    int countInProgressSessions1();
+    // Find PLANNED sessions that should start (start date and time are less than or equal to current)
+    List<TrainingSession> findByStatusAndStartDateAndStartHourLessThanEqual(
+            TrainingSessionStatus status, LocalDate startDate, LocalTime startHour);
+
+    // Find IN_PROGRESS sessions that should end (end date and time are less than or equal to current)
+    List<TrainingSession> findByStatusAndEndDateAndEndHourLessThanEqual(
+            TrainingSessionStatus status, LocalDate endDate, LocalTime endHour);
+
 }
 
 

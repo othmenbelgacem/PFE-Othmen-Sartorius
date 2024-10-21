@@ -22,4 +22,7 @@ export class TrainingSessionStatisticService {
   getTop10TrainingRequests(): Observable<TrainingRequestCount[]> {
     return this.http.get<TrainingRequestCount[]>(`${this.TRAINING_REQUESTS_API}/top10`);
   }
+  getSessionStatsByMonth(year: number, month: number): Observable<any> {
+    return this.http.get<any>(`${this.TRAINING_REQUESTS_API}/sessions-by-month?year=${year}&month=${month}`);
+  }
 }

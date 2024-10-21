@@ -16,25 +16,14 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrainingSessionDto {
-    private Long id;  // Changed to Long to match BaseEntity
+    private Long id;
+    private UUID uuid;
     private LocalDate startDate;
     private LocalDate endDate;
     private TrainingSessionStatus status;
     private String place;
     private LocalTime startHour;
     private List<DocumentDto> documents;
-
-    public TrainingSessionDto(TrainingSession session) {
-        this.id = session.getId();  // Ensure id is properly set
-        this.startDate = session.getStartDate();
-        this.endDate = session.getEndDate();
-        this.status = session.getStatus();
-        this.place = session.getPlace();
-        this.startHour = session.getStartHour();
-        this.documents = session.getDocuments().stream()
-                .map(DocumentDto::new)
-                .collect(Collectors.toList());
-    }
 
     }
 

@@ -59,7 +59,7 @@ public class UserService {
 	private final MediaDatailsMapper mediaDatailsMapper;
 	private final MediaService mediaService;
 
-	private final ResetPasswordService resetPasswordService;
+
 	private final EmailService emailService;
 	private final TeamService teamService;
 
@@ -231,7 +231,7 @@ public class UserService {
 		if (userUuid != null) {
 			User existingUser = userRepository.findByUuid(UUID.fromString(userUuid)).orElse(null);
 			if (existingUser != null && existingUser.getIdentifier().equals(identifier)) {
-				return true; // The same user's matricule is considered unique
+				return true;
 			}
 		}
 		return userRepository.findByIdentifier(identifier) == null;

@@ -12,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.sartorius.tma.enumeration.RoleCode.*;
 
@@ -39,13 +37,13 @@ public class TrainingSessionStatisticService {
                 return getTrainerStatisticData(currentUserId);
             } else if (ADMINISTRATOR.equals(role.getRoleCode())) {
                 return getAdminStatisticData();
-            }else if (OPERATOR.equals(role.getRoleCode())) { // Added this line to handle collaborator role
-                return getCollaboratorStatisticData(currentUserId); // Added this line to call the collaborator method
+            }else if (OPERATOR.equals(role.getRoleCode())) {
+                return getCollaboratorStatisticData(currentUserId);
             }
         }
         return null;
     }
-    // Added this method to handle collaborator statistics
+
     public TrainingSessionStatisticDto getCollaboratorStatisticData(UUID collaboratorId) {
         return TrainingSessionStatisticDto.builder()
                 .totalSession(trainingSessionRepository.countAllSessionsByOperator(collaboratorId))
@@ -89,7 +87,14 @@ public class TrainingSessionStatisticService {
                 .sessionStaticByTrainerOrOperator(null)
                 .build();
     }
+    public Map<String, Integer> getSessionStatsByMonth(int year, int month) {
+        Map<String, Integer> stats = new HashMap<>();
+        stats.put("done", trainingSessionRepository.countDoneSessionsByMonth(year, month));
 
+        stats.put("inProgress", trainingSessionRepository.countInProgressSessions1());
+
+        return stats;
+    }
     public List<TrainingRequestCountDTO> getTop10TrainingRequests() {
         return trainingRequestRepository.findTop10TrainingRequests();
     }

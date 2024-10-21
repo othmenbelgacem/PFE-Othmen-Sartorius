@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.sartorius.tma.dtos.AddressDto;
+
 import com.sartorius.tma.dtos.MediaDetails;
 import com.sartorius.tma.enumeration.RoleCode;
 
@@ -26,7 +26,6 @@ public class UserRequest {
 	private String userLastName;
 	private String identifier;
 	private RoleCode role;
-	private AddressDto userAddress;
 	private MultipartFile profilePicture;
 	private MediaDetails userProfilePicture;
 

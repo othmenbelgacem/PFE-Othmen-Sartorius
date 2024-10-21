@@ -39,7 +39,7 @@
     </button>
   </div>
   <div class="update mr-auto">
-    <button type="submit" class="btn btn-primary btn-round" (click)="onSave()">
+    <button *ngIf="!isDone" type="submit" class="btn btn-primary btn-round" (click)="onSave()">
       Enregistrer
     </button>
   </div>

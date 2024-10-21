@@ -6,6 +6,7 @@
           <h4 class="card-title">Liste des séances de formations</h4>
           <div class="update">
             <button
+            *ngIf="!isDone"
               type="submit"
               class="btn btn-primary btn-round"
               (click)="addPresence()"

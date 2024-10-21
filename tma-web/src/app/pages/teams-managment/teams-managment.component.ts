@@ -23,7 +23,7 @@ export class TeamsManagmentComponent implements OnInit {
   modalTitle = "";
 
   page: number = 1;
-  pageSize: number = 5;
+  pageSize: number = 20;
   collectionSize: number = 0;
   addOrUpdateMode: number;
 

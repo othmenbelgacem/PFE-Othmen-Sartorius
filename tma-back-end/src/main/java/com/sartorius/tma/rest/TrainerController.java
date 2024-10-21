@@ -33,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class TrainerController {
   private final TrainerService trainerService;
   private final UserService userService;
-  private static final Logger logger = LoggerFactory.getLogger(TrainerController.class);
+
 
   @GetMapping(value = "/list")
   public List<TrainerDetails> getAllUsers() {
@@ -86,14 +86,14 @@ public class TrainerController {
   public ResponseEntity<Void> deleteUser(@RequestParam(value = "user-uuid") UUID userUuid){
      trainerService.deleteTrainer(userUuid);
     return ResponseEntity.noContent()
-            .build();  // Utilisez noContent() pour un statut 204
+            .build();
   }
 
   @GetMapping("/all")
   public List<TrainerDto> getAllTrainers() {
-    logger.info("Received request to get all trainers");
+
     List<TrainerDto> trainers = trainerService.retrieveAllTrainers();
-    logger.info("Returning {} trainers", trainers.size());
+
     return trainers;
   }
   

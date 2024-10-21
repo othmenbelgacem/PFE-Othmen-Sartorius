@@ -14,6 +14,7 @@ import java.util.UUID;
 public interface TrainingSubTypeRepository extends JpaRepository<TrainingSubType, Long> {
 
   TrainingSubType findByUuid(UUID uuid);
+  void deleteByUuid(UUID uuid);
 
   List<TrainingSubType> findByTypeLabelOrderByLabel(String TrainingTypeLabel, Pageable pageable);
 

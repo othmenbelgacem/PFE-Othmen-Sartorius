@@ -42,6 +42,7 @@ public class TrainingSession extends BaseEntity {
 	private TrainingSessionStatus status;
 	private String place;
 	private LocalTime startHour;
+	private LocalTime endHour;
 
 	@ManyToOne
 	private TrainingType trainingType;

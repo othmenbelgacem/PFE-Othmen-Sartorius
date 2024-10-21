@@ -13,10 +13,7 @@ import java.util.stream.Collectors;
 import com.sartorius.tma.business.services.files.DBFileStorageService;
 import com.sartorius.tma.client.dtos.request.TrainingSessionRequest;
 import com.sartorius.tma.client.dtos.response.TrainingSessionResponse;
-import com.sartorius.tma.dtos.DocumentDto;
-import com.sartorius.tma.dtos.PageDto;
-import com.sartorius.tma.dtos.TrainingSessionPresenceDto;
-import com.sartorius.tma.dtos.TrainingSessionPresencePerDateDto;
+import com.sartorius.tma.dtos.*;
 import com.sartorius.tma.enumeration.RoleCode;
 import com.sartorius.tma.enumeration.TrainingRequestStatus;
 import com.sartorius.tma.enumeration.TrainingSessionStatus;
@@ -25,10 +22,8 @@ import com.sartorius.tma.persistence.entities.*;
 import com.sartorius.tma.persistence.repositories.*;
 import org.hibernate.Hibernate;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.sartorius.tma.business.services.email.EmailService;
 
@@ -68,6 +63,7 @@ public class TrainingSessionService {
 	}
 
 
+
     public void saveSession(TrainingSessionRequest request) {
 		TrainingType trainingType = trainingTypeRepository.findByUuid(request.getTrainingTypeUuid());
 		TrainingSubType trainingSubType = request.getTrainingSubTypeUuid() != null ? trainingSubTypeRepository.findByUuid(request.getTrainingSubTypeUuid()) : null;
@@ -90,6 +86,7 @@ public class TrainingSessionService {
 				.operators(trainingRequests.stream().map(TrainingRequest::getOperator).toList())
 				.place(request.getPlace())
 				.startHour(request.getStartHour())
+				.endHour(request.getEndHour())
 				.trainingRequests(trainingRequests).build();
 
 		session = trainingSessionRepository.save(session);
@@ -117,11 +114,11 @@ public class TrainingSessionService {
 							trainingTypeName.getLabel(),
 							trainingSubTypeName != null ? trainingSubType.getLabel(): null
 					);
-					try {
-						emailService.sendEmail(teamLeader.getUserEmail(), "Training Session Planned For"+" "+operator.getIdentifier(), emailBody);
-					} catch (MessagingException e) {
-						log.error("Failed to send email to team leader for operator {}", operator.getUserFirstName(), e);
-					}
+//					try {
+//						emailService.sendEmail(teamLeader.getUserEmail(), "Training Session Planned For"+" "+operator.getIdentifier(), emailBody);
+//					} catch (MessagingException e) {
+//						log.error("Failed to send email to team leader for operator {}", operator.getUserFirstName(), e);
+//					}
 				}
 			}
 		}
@@ -157,6 +154,33 @@ public class TrainingSessionService {
 			throw new RuntimeException("Failed to load email template", e);
 		}
 	}
+	public List<TrainingSessionDto> getAllDoneSessions() {
+		List<TrainingSession> doneSessions = trainingSessionRepository.findAllDone();
+		return doneSessions.stream()
+				.map(this::convertToDto)
+				.collect(Collectors.toList());
+	}
+	private TrainingSessionDto convertToDto(TrainingSession session) {
+		return new TrainingSessionDto(
+				session.getId(),
+				session.getUuid(),
+				session.getStartDate(),
+				session.getEndDate(),
+				session.getStatus(),
+				session.getPlace(),
+				session.getStartHour(),
+				session.getDocuments().stream()
+						.map(document -> new DocumentDto(
+								document.getId(),
+								document.getMediaLabel(),
+								document.getMediaSize(),
+								document.getMediaUrl(),
+								document.getMediaContentType(),
+								document.getOriginalName()
+						))
+						.collect(Collectors.toList())
+		);
+	}
 
 	public PageDto<TrainingSessionResponse> getSessions(Integer page, Integer offset, TrainingSessionStatus status) {
 		Pageable pageable = PageRequest.of(page, offset, Sort.by("createdAt").descending());
@@ -175,6 +199,8 @@ public class TrainingSessionService {
 			} else {
 				sessions = trainingSessionRepository.findByTrainingRequestsTeamLeaderUuidOrderByCreatedAtDesc(user.getUuid(), pageable);
 			}
+
+
 		} else if (user.getRole().getRoleCode() == RoleCode.TRAINER) {
 			if (status != null) {
 				sessions = trainingSessionRepository.findByTrainerUuidAndStatusOrderByCreatedAtDesc(user.getUuid(), status, pageable);
@@ -191,6 +217,7 @@ public class TrainingSessionService {
 
 		return new PageDto<>(sessions.getContent().stream().map(TrainingSessionResponse::fromSession).toList(), sessions.getTotalElements());
 	}
+
 
 
 	public void updateStatus(UUID sessionId, TrainingSessionStatus status) {
@@ -396,6 +423,31 @@ public class TrainingSessionService {
 		Document document = documentRepository.findById(documentId)
 				.orElseThrow(() -> new Exception("Document not found"));
 		return fileStorageService.loadFileAsResource(document.getMediaUrl());
+	}
+	@Scheduled(fixedRate = 60000)  // runs every minute
+	public void updateSessionStatuses() {
+		LocalDate currentDate = LocalDate.now();
+		LocalTime currentTime = LocalTime.now();
+
+		// Find sessions that are 'PLANNED' and should be 'IN_PROGRESS'
+		List<TrainingSession> plannedSessions = trainingSessionRepository
+				.findByStatusAndStartDateAndStartHourLessThanEqual(
+						TrainingSessionStatus.PLANNED, currentDate, currentTime);
+
+		for (TrainingSession session : plannedSessions) {
+			session.setStatus(TrainingSessionStatus.IN_PROGRESS);
+			trainingSessionRepository.save(session);
+		}
+
+		// Find sessions that are 'IN_PROGRESS' and should be 'DONE'
+		List<TrainingSession> inProgressSessions = trainingSessionRepository
+				.findByStatusAndEndDateAndEndHourLessThanEqual(
+						TrainingSessionStatus.IN_PROGRESS, currentDate, currentTime);
+
+		for (TrainingSession session : inProgressSessions) {
+			session.setStatus(TrainingSessionStatus.DONE);
+			trainingSessionRepository.save(session);
+		}
 	}
 
 }

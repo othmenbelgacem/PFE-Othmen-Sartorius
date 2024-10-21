@@ -13,6 +13,8 @@ import { UtilsService } from "app/service/utils.service";
 export class SessionPresencesComponent implements OnInit {
   sessions: any[] = [];
   sessionId: string;
+  doneSessions: any[] = [];
+  isDone: boolean = false;
   constructor(
     private service: TrainingSessionService,
     private activatedRoute: ActivatedRoute,
@@ -22,7 +24,19 @@ export class SessionPresencesComponent implements OnInit {
 
   ngOnInit(): void {
     this.sessionId = this.activatedRoute.snapshot.paramMap.get("uuid");
+    console.log('Current sessionId:', this.sessionId);
     this.getSessionPresences();
+    this.service.getDoneSessions().subscribe((sessions) => {
+      this.doneSessions = sessions;
+
+      this.isDone = this.doneSessions.some(session => {
+      
+        return session.uuid === this.sessionId; 
+      });
+
+      console.log('Is session DONE?', this.isDone);
+    });
+  
   }
 
   getSessionPresences() {
